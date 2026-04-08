@@ -18,3 +18,5 @@ MACRO(add_test test_name)
   include(GoogleTest)
   gtest_discover_tests(${test_name})
 ENDMACRO()
+
+add_test(vectormath_test)
