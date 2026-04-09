@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cmath>
-#include <concepts>
 #include <cstddef>
 #include <limits>
 #include <ostream>
@@ -237,8 +236,74 @@ class CrossProductable {
   }
 };
 
-using Point2 = Tuple<2, struct PointTag, Negateable, Printable>;
-using Point3 = Tuple<3, struct PointTag, Negateable, Printable>;
+template <typename Derived>
+class Translateable {
+  template <typename Vec>
+    requires(Derived::Dim == Vec::Dim and !std::is_same_v<Derived, Vec>)
+  friend Derived &operator+=(Derived &p, const Vec &v) {
+    p.x += v.x;
+    p.y += v.y;
+    if constexpr (Derived::Dim == 3) p.z += v.z;
+    if constexpr (Derived::Dim == 4) {
+      p.z += v.z;
+      p.w += v.w;
+    }
+
+    return p;
+  }
+
+  template <typename Vec>
+    requires(Derived::Dim == Vec::Dim and !std::is_same_v<Derived, Vec>)
+  friend Derived operator+(Derived p, const Vec &v) {
+    p += v;
+    return p;
+  }
+
+  template <typename Vec>
+    requires(Derived::Dim == Vec::Dim and !std::is_same_v<Derived, Vec>)
+  friend Derived operator+(const Vec &v, Derived p) {
+    p += v;
+    return p;
+  }
+
+  template <typename Vec>
+    requires(Derived::Dim == Vec::Dim and !std::is_same_v<Derived, Vec>)
+  friend Derived &operator-=(Derived &p, const Vec &v) {
+    p.x -= v.x;
+    p.y -= v.y;
+    if constexpr (Derived::Dim == 3) p.z -= v.z;
+    if constexpr (Derived::Dim == 4) {
+      p.z -= v.z;
+      p.w -= v.w;
+    }
+
+    return p;
+  }
+
+  template <typename Vec>
+    requires(Derived::Dim == Vec::Dim and !std::is_same_v<Derived, Vec>)
+  friend Derived operator-(Derived p, const Vec &v) {
+    p -= v;
+    return p;
+  }
+};
+
+template <typename VectorType>
+struct PointDifferenceable {
+  template <typename Derived>
+  class Skill {
+    friend VectorType operator-(const Derived &lhs, const Derived &rhs) {
+      if constexpr (Derived::Dim == 2) {
+        return VectorType(lhs.x - rhs.x, lhs.y - rhs.y);
+      } else if constexpr (Derived::Dim == 3) {
+        return VectorType(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z);
+      } else if constexpr (Derived::Dim == 4) {
+        return VectorType(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z,
+                          lhs.w - rhs.w);
+      }
+    }
+  };
+};
 
 using Vec2 =
     Tuple<2, struct VectorTag, Addable, Deductable, Multipliable, Divideable,
@@ -250,5 +315,12 @@ using Vec4 =
     Tuple<4, struct VectorTag, Addable, Deductable, Multipliable, Divideable,
           Negateable, Printable, HasL2Distance, DotProductable>;
 
-using Color = Tuple<3, struct ColorTag, Printable>;
-using Color4 = Tuple<4, struct ColorTag, Printable>;
+using Point2 = Tuple<2, struct PointTag, Negateable, Printable, Translateable,
+                     PointDifferenceable<Vec2>::Skill>;
+using Point3 = Tuple<3, struct PointTag, Negateable, Printable, Translateable,
+                     PointDifferenceable<Vec3>::Skill>;
+using Point4 = Tuple<4, struct PointTag, Negateable, Printable, Translateable,
+                     PointDifferenceable<Vec4>::Skill>;
+
+using Color = Tuple<3, struct ColorTag, Printable, Addable, Multipliable>;
+using Color4 = Tuple<4, struct ColorTag, Printable, Addable, Multipliable>;
