@@ -3,6 +3,7 @@ set(PROJECT_LIBRARY_NAME fx_tracer_lib)
 find_package(Threads REQUIRED)
 
 set(src 
+    ppm.cpp 
 )
 
 add_library(${PROJECT_LIBRARY_NAME} STATIC ${src})
