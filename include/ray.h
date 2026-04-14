@@ -1,4 +1,5 @@
-#pragma once
+#ifndef INCLUDE_RAY_H_
+#define INCLUDE_RAY_H_
 
 #include "common.h"
 #include "vectormath.h"
@@ -12,7 +13,7 @@ class Ray {
       : origin_{origin}, dir_{direction} {}
   ~Ray() = default;
 
-  inline Point3 at(const Float time) { return origin_ + time * dir_; }
+  inline Point3 at(const Float time) const { return origin_ + time * dir_; }
   inline const Vec3& direction() const { return dir_; }
   inline const Point3& origin() const { return origin_; }
 };
