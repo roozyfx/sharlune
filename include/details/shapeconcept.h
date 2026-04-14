@@ -17,14 +17,14 @@ class HittableConcept {
   virtual std::unique_ptr<HittableConcept> clone() const = 0;
 };
 
-template <typename ShapeT, typename HitStrategy>
+template <typename GeometryT, typename HitStrategy>
 class OwningHittableModel : public HittableConcept {
  public:
-  explicit OwningHittableModel(ShapeT shape, HitStrategy hs)
-      : shape_(std::move(shape)), hitst_(std::move(hs)) {}
+  explicit OwningHittableModel(GeometryT geom, HitStrategy hs)
+      : geometry_(std::move(geom)), hit_strategy_(std::move(hs)) {}
 
   bool hit(const Ray &r, const Interval &t, HitRecord &record) const override {
-    return hitst_(shape_, r, t, record);
+    return hit_strategy_(geometry_, r, t, record);
   }
 
   std::unique_ptr<HittableConcept> clone() const override {
@@ -32,8 +32,8 @@ class OwningHittableModel : public HittableConcept {
   }
 
  private:
-  ShapeT shape_;
-  HitStrategy hitst_;
+  GeometryT geometry_;
+  HitStrategy hit_strategy_;
 };
 }  // namespace details
 
