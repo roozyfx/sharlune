@@ -6,13 +6,15 @@
 #include <string_view>
 #include <vector>
 
+#include "common.h"
+
 /* An extremely simple PPM Image class*/
 
 class PPMImage {
   std::string filename_;
   size_t width_;
   size_t height_;
-  float max_val_;
+  Float max_val_;
   std::ofstream file_;
 
  public:
@@ -25,4 +27,5 @@ class PPMImage {
 
   void write(const std::vector<std::vector<int>> &data);
 };
+
 #endif  // INCLUDE_PPM_H_
