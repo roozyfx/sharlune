@@ -1,3 +1,13 @@
-#pragma once
+#ifndef INCLUDE_COMMON_GEOMETRIES_H_
+#define INCLUDE_COMMON_GEOMETRIES_H_
+#include <limits>
+#include <numbers>
 
 using Float = double;
+constexpr const Float INF = std::numeric_limits<Float>::infinity();
+constexpr const Float PI = static_cast<Float>(std::numbers::pi);
+
+constexpr Float degrees_to_radians(const Float degrees) {
+  return static_cast<Float>(degrees * PI / 180.0);
+}
+#endif  // INCLUDE_COMMON_GEOMETRIES_H_
