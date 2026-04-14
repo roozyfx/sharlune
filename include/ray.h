@@ -16,3 +16,5 @@ class Ray {
   inline const Vec3& direction() const { return dir_; }
   inline const Point3& origin() const { return origin_; }
 };
+
+#endif

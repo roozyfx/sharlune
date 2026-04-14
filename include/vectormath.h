@@ -1,4 +1,5 @@
-#pragma once
+#ifndef INCLUDE_VECTOR_MATH_H_
+#define INCLUDE_VECTOR_MATH_H_
 
 #include <cmath>
 #include <cstddef>
@@ -324,3 +325,5 @@ using Point4 = Tuple<4, struct PointTag, Negateable, Printable, Translateable,
 
 using Color = Tuple<3, struct ColorTag, Printable, Addable, Multipliable>;
 using Color4 = Tuple<4, struct ColorTag, Printable, Addable, Multipliable>;
+
+#endif  // INCLUDE_VECTOR_MATH_H_

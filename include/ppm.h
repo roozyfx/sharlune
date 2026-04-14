@@ -1,4 +1,5 @@
-#pragma once
+#ifndef INCLUDE_PPM_H_
+#define INCLUDE_PPM_H_
 
 #include <cstddef>
 #include <fstream>
@@ -24,3 +25,4 @@ class PPMImage {
 
   void write(const std::vector<std::vector<int>> &data);
 };
+#endif  // INCLUDE_PPM_H_
