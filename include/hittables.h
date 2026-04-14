@@ -25,13 +25,13 @@ An extremely inefficient solution to find the Ray r, intersection with the
 nearest object (Hittble) in our list
 */
   // TODO Not a good name, find a better one.
-  bool hit_all(const Ray &r, Interval tt, HitRecord &record) {
+  bool hit_all(const Ray &r, Interval tt, HitRecord &record) const {
     HitRecord temp_record;
     bool hit_anything{false};
-    auto closest_sofar{tt.t_max};
+    auto closest_sofar{tt.max};
 
     for (const auto &htbl : hittables_) {
-      if (hit(*htbl, r, Interval(tt.t_min, closest_sofar), temp_record)) {
+      if (hit(*htbl, r, Interval(tt.min, closest_sofar), temp_record)) {
         hit_anything = true;
         closest_sofar = temp_record.t;
         record = temp_record;

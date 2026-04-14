@@ -6,12 +6,23 @@
 #include "common.h"
 
 struct Interval {
-  Float t_min;
-  Float t_max;
+  Float min{INF};
+  Float max{-INF};
 
-  explicit Interval(Float tmin, const Float &tmax) : t_min{tmin}, t_max{tmax} {
-    if (t_min >= t_max) std::swap(t_min, t_max);
+  Interval() = default;
+  explicit Interval(Float min, const Float &max) : min{min}, max{max} {}
+
+  inline constexpr Float size() const { return max - min; }
+
+  inline bool contains(const Float val) const {
+    return val >= min and val <= max;
   }
+
+  inline bool surrounds(const Float val) const {
+    return val > min and val < max;
+  }
+
+  static const Interval empty, universe;
 };
 
 #endif  // INCLUDE_INTERVAL_H_

@@ -21,9 +21,9 @@ bool hit_sphere(const Sphere &s, const Ray &r, const Interval &tt,
   const auto sqrtdisc = std::sqrt(discriminant);
 
   auto root = (h - sqrtdisc) / a;
-  if (root < tt.t_min or root > tt.t_max) {
+  if (!tt.surrounds(root)) {
     root = (h + sqrtdisc) / a;
-    if (root < tt.t_min or root > tt.t_max) {
+    if (!tt.surrounds(root)) {
       return false;
     }
   }
