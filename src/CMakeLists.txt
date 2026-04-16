@@ -5,6 +5,7 @@ find_package(Threads REQUIRED)
 set(src 
     ppm.cpp 
     hit_strategies.cpp
+    render.cpp
 )
 
 add_library(${PROJECT_LIBRARY_NAME} STATIC ${src})
