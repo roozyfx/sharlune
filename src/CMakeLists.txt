@@ -2,6 +2,7 @@ set(PROJECT_LIBRARY_NAME fx_tracer_lib)
 
 find_package(Threads REQUIRED)
 
+  color_functions.cpp
   scene.cpp
 )
 
