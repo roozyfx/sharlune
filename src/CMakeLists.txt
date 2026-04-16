@@ -3,6 +3,9 @@ set(PROJECT_LIBRARY_NAME fx_tracer_lib)
 find_package(Threads REQUIRED)
 
   color_functions.cpp
+  pinhole_camera.cpp
+  ppm.cpp 
+  render.cpp
   rng.cpp
   scene.cpp
 )

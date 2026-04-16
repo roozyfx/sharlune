@@ -323,7 +323,9 @@ using Point3 = Tuple<3, struct PointTag, Negateable, Printable, Translateable,
 using Point4 = Tuple<4, struct PointTag, Negateable, Printable, Translateable,
                      PointDifferenceable<Vec4>::Skill>;
 
-using Color = Tuple<3, struct ColorTag, Printable, Addable, Multipliable>;
-using Color4 = Tuple<4, struct ColorTag, Printable, Addable, Multipliable>;
+using Color =
+    Tuple<3, struct ColorTag, Printable, Addable, Multipliable, Divideable>;
+using Color4 =
+    Tuple<4, struct ColorTag, Printable, Addable, Multipliable, Divideable>;
 
 #endif  // INCLUDE_VECTOR_MATH_H_
