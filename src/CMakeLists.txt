@@ -2,10 +2,7 @@ set(PROJECT_LIBRARY_NAME fx_tracer_lib)
 
 find_package(Threads REQUIRED)
 
-set(src 
-    ppm.cpp 
-    hit_strategies.cpp
-    render.cpp
+  scene.cpp
 )
 
 add_library(${PROJECT_LIBRARY_NAME} STATIC ${src})
