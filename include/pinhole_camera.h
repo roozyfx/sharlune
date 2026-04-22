@@ -11,11 +11,13 @@ class PinholeCamera : public Camera {
                          const Float aspect_ratio = 16. / 9.,
                          const Float focal_length = 1.,
                          const Float viewport_height = 2.,
-                         const size_t sample_per_pixel = 100)
+                         const size_t sample_per_pixel = 100,
+                         const size_t max_depth = 50)
       : cam_center_(center),
         image_width_(image_width),
         aspect_ratio_(aspect_ratio),
         sample_per_pixel_(sample_per_pixel),
+        max_depth_(max_depth),
         focal_length_(focal_length),
         viewport_height_(viewport_height) {
     data_.reserve(image_height_);
@@ -70,6 +72,7 @@ class PinholeCamera : public Camera {
   size_t image_height_ =
       std::max(static_cast<Float>(image_width_) / aspect_ratio_, 1.);
   size_t sample_per_pixel_{100};
+  size_t max_depth_{10};
 
   Float focal_length_{1.};
   Float viewport_height_{2.0};

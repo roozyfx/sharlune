@@ -16,7 +16,7 @@ Color PinholeCamera::sample_pixel_color(const size_t x, const size_t y,
     Point3 sample = pixel_sample(x, y);
     Vec3 dir = ray_direction(sample);
     Ray r(cam_center_, dir);
-    pixel_color += color_function(r, world);
+    pixel_color += color_function(r, world, max_depth_);
   }
 
   return pixel_color / sample_per_pixel_;
