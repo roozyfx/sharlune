@@ -2,7 +2,10 @@ set(PROJECT_LIBRARY_NAME fx_tracer_lib)
 
 find_package(Threads REQUIRED)
 
+set(src
   color_functions.cpp
+  hit_strategies.cpp
+  interval.cpp
   pinhole_camera.cpp
   ppm.cpp 
   render.cpp
