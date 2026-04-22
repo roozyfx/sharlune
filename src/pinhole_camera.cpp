@@ -17,6 +17,8 @@ Color PinholeCamera::sample_pixel_color(const size_t x, const size_t y,
     Vec3 dir = ray_direction(sample);
     Ray r(cam_center_, dir);
     pixel_color += color_function(r, world, max_depth_);
+    // Do Gamma correction on the pixel color
+    linear_to_gamma(pixel_color);
   }
 
   return pixel_color / sample_per_pixel_;

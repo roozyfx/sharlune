@@ -1,5 +1,6 @@
 #ifndef INCLDUE_CAMERA_H_
 #define INCLDUE_CAMERA_H_
+#include <cmath>
 #include <functional>
 #include <memory>
 #include <vector>
@@ -25,6 +26,13 @@ class Camera {
   virtual Color sample_pixel_color(const size_t x, const size_t y,
                                    const std::shared_ptr<Hittables> &world,
                                    ColorFunction color_function) const = 0;
+
+ protected:
+  inline void linear_to_gamma(Color &color) const {
+    color.x = std::sqrt(color.x);
+    color.y = std::sqrt(color.y);
+    color.z = std::sqrt(color.z);
+  }
 };
 
 #endif  // INCLDUE_CAMERA_H_
