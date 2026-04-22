@@ -25,7 +25,6 @@ int main() {
                                  camera->image_height(), max_val, num_channels);
 
   // Render loop
-  render(std::move(camera), std::move(image), world, sample_colorize);
-
+  render(std::move(camera), std::move(image), world, naive_diffuse);
   return EXIT_SUCCESS;
 }

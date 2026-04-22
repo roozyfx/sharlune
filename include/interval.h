@@ -1,8 +1,6 @@
 #ifndef INCLUDE_INTERVAL_H_
 #define INCLUDE_INTERVAL_H_
 
-#include <algorithm>
-
 #include "common.h"
 
 struct Interval {
