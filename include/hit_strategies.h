@@ -1,7 +1,7 @@
 #ifndef INCLUDE_HIT_STRATEGIES_H_
 #define INCLUDE_HIT_STRATEGIES_H_
 
-struct Sphere;
+class Sphere;
 class Ray;
 struct HitRecord;
 struct Interval;

@@ -10,11 +10,11 @@
 bool hit_sphere(const Sphere &s, const Ray &r, const Interval &tt,
                 HitRecord &record) {
   const auto d = r.direction();
-  const auto oc = s.center - r.origin();
+  const auto oc = s.center() - r.origin();
 
   const auto a = length_squared(d);
   const auto h = dot(d, oc);
-  const auto c = length_squared(oc) - s.radius * s.radius;
+  const auto c = length_squared(oc) - s.radius() * s.radius();
 
   const auto discriminant = h * h - a * c;
   if (discriminant < 0) return false;
@@ -31,7 +31,7 @@ bool hit_sphere(const Sphere &s, const Ray &r, const Interval &tt,
   // save hit information to record
   record.p = r.at(root);
   record.t = root;
-  auto outward_normal = (record.p - s.center) / s.radius;
+  auto outward_normal = (record.p - s.center()) / s.radius();
   record.setFaceNormal(r, outward_normal);
 
   return true;
