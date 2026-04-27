@@ -15,29 +15,48 @@ set(src
 
 add_library(${PROJECT_LIBRARY_NAME} STATIC ${src})
 
-target_compile_options(${PROJECT_LIBRARY_NAME} PRIVATE 
-                        -pthread -Wall -Wextra -Wpedantic
-                        $<$<CONFIG:Debug>:-g;-O0;-fsanitize=address,undefined,leak;-Wfloat-equal;-fno-omit-frame-pointer>
-                        $<$<CONFIG:Release>:-O3;-march=native;-DNDEBUG>)
-
 target_include_directories(${PROJECT_LIBRARY_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
-# TODO : Add more compiler options for different compilers
-if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-# FIXME: -stdlib=libc++ is required for clang to use C++11 features, but it causes linker errors on Linux. Need to investigate further.
-#   target_compile_options(${PROJECT_LIBRARY_NAME} -stdlib=libc++)
-elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-  target_compile_options(${PROJECT_LIBRARY_NAME} PUBLIC 
-                        $<$<CONFIG:Debug>:-Weffc++>)
+# ---------------------------------------------------------------------------
+# gcc and Clang (GCC and Clang compilers)
+# ---------------------------------------------------------------------------
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+  if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    target_compile_options(${PROJECT_LIBRARY_NAME} PRIVATE
+        -Wall -Wextra -Wpedantic
+        $<$<CONFIG:Debug>:-g;-O0;-fsanitize=address,undefined;-Wfloat-equal;-fno-omit-frame-pointer>
+        $<$<CONFIG:Release>:-O3;-march=native;-DNDEBUG>
+    )
+  elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  target_compile_options(${PROJECT_LIBRARY_NAME} PRIVATE
+      -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-weak-vtables -Wno-c++20-extensions
+      $<$<CONFIG:Debug>:-g;-O0;-fsanitize=address,undefined;-Wfloat-equal;-fno-omit-frame-pointer>
+      $<$<CONFIG:Release>:-O3;-march=native;-DNDEBUG>
+  )
+  endif()
+      
+    target_link_options(${PROJECT_LIBRARY_NAME} PUBLIC
+        $<$<CONFIG:Debug>:-fsanitize=address,undefined>
+    )
+# ---------------------------------------------------------------------------
+# MSVC (Microsoft Visual C++)
+# ---------------------------------------------------------------------------
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    target_compile_options(${PROJECT_LIBRARY_NAME} PRIVATE
+        /W4 /permissive-
+        $<$<CONFIG:Debug>:/Od;/Zi;/fsanitize=address>
+        $<$<CONFIG:Release>:/O2;/DNDEBUG>
+    )
+      
+    target_link_options(${PROJECT_LIBRARY_NAME} PUBLIC
+        # MSVC AddressSanitizer requires incremental linking to be disabled
+        $<$<CONFIG:Debug>:/INCREMENTAL:NO>
+    )
 endif()
-
-target_link_options(${PROJECT_LIBRARY_NAME} PUBLIC
-    $<$<CONFIG:Debug>:-fsanitize=address,undefined>
-)
 
 target_link_libraries(${PROJECT_LIBRARY_NAME} PUBLIC Threads::Threads)
 
-if (CMAKE_BUILD_TYPE STREQUAL "Release")
-  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DPARALLEL")
-  target_link_libraries(${PROJECT_LIBRARY_NAME} PRIVATE tbb)
-endif()
+target_compile_definitions(${PROJECT_LIBRARY_NAME} PRIVATE 
+    $<$<CONFIG:Release>:PARALLEL>
+)
+target_link_libraries(${PROJECT_LIBRARY_NAME} PRIVATE $<$<CONFIG:Release>:tbb>)
