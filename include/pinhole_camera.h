@@ -34,7 +34,7 @@ class PinholeCamera : public Camera {
   inline DataStorage &data() override { return data_; }
 
   // TODO Improve efficiency
-  inline void write_pixel(Color color, std::vector<int> &row) override {
+  inline void write_pixel(Color &&color, std::vector<int> &row) override {
     row.push_back(static_cast<int>(color.x));
     row.push_back(static_cast<int>(color.y));
     row.push_back(static_cast<int>(color.z));

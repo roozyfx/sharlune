@@ -16,7 +16,7 @@ void render(std::unique_ptr<Camera> camera, std::unique_ptr<Film> film,
     for (size_t x = 0; x < camera->image_width(); ++x) {
       Color pixel_color = film->max_val() * camera->sample_pixel_color(
                                                 x, y, world, color_function);
-      camera->write_pixel(pixel_color, row);
+      camera->write_pixel(std::move(pixel_color), row);
     }
 
     camera->write_line(row);
