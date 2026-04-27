@@ -23,7 +23,7 @@ class PinholeCamera : public Camera {
     data_.reserve(image_height_);
   }
 
-  ~PinholeCamera() = default;
+  ~PinholeCamera() override = default;
 
   inline constexpr Point3 center() const override { return cam_center_; }
   inline constexpr size_t image_width() const override { return image_width_; }
@@ -35,9 +35,9 @@ class PinholeCamera : public Camera {
 
   // TODO Improve efficiency
   inline void write_pixel(Color color, std::vector<int> &row) override {
-    row.push_back(color.x);
-    row.push_back(color.y);
-    row.push_back(color.z);
+    row.push_back(static_cast<int>(color.x));
+    row.push_back(static_cast<int>(color.y));
+    row.push_back(static_cast<int>(color.z));
   }
 
   // TODO Improve efficiency
@@ -57,7 +57,7 @@ class PinholeCamera : public Camera {
   }
 
   inline Point3 pixel_center_loc(const size_t x, const size_t y) const {
-    return pixel00_center_loc() + x * d_u_ + y * d_v_;
+    return pixel00_center_loc() + static_cast<Float>(x) * d_u_ + static_cast<Float>(y) * d_v_;
   }
 
   Point3 pixel_sample(const size_t x, const size_t y) const;
@@ -69,8 +69,8 @@ class PinholeCamera : public Camera {
   Point3 cam_center_ = Point3(0., 0., 0.);
   size_t image_width_{800};
   Float aspect_ratio_{16. / 9.};
-  size_t image_height_ =
-      std::max(static_cast<Float>(image_width_) / aspect_ratio_, 1.);
+  size_t image_height_ = static_cast<size_t>
+      (std::max(static_cast<Float>(image_width_) / aspect_ratio_, 1.));
   size_t sample_per_pixel_{100};
   size_t max_depth_{10};
 

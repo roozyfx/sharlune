@@ -7,4 +7,4 @@
 
 std::shared_ptr<Hittables> create_world();
 
-#endif
+#endif  // INCLUDE_SCENE_H_

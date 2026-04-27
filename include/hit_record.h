@@ -3,6 +3,7 @@
 #include "common.h"
 #include "ray.h"
 #include "vectormath.h"
+
 struct HitRecord {
   Point3 p{Point3{INF, INF, INF}};
   Vec3 n{Vec3(INF, INF, INF)};

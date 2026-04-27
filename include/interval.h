@@ -8,7 +8,8 @@ struct Interval {
   Float max{-INF};
 
   Interval() = default;
-  explicit Interval(Float min, const Float &max) : min{min}, max{max} {}
+  explicit Interval(Float minimum, const Float &maximum)
+      : min{minimum}, max{maximum} {}
 
   inline constexpr Float size() const { return max - min; }
 
@@ -20,7 +21,8 @@ struct Interval {
     return val > min and val < max;
   }
 
-  static const Interval empty, universe;
+  static const Interval& empty();
+  static const Interval& universe();
 };
 
 #endif  // INCLUDE_INTERVAL_H_

@@ -1,5 +1,6 @@
 #include "pinhole_camera.h"
 #include "rng.h"
+
 Point3 PinholeCamera::pixel_sample(const size_t x, const size_t y) const {
   const auto center{pixel_center_loc(x, y)};
   const auto half_u{u_length_ * 0.5};
@@ -21,5 +22,5 @@ Color PinholeCamera::sample_pixel_color(const size_t x, const size_t y,
     linear_to_gamma(pixel_color);
   }
 
-  return pixel_color / sample_per_pixel_;
+  return pixel_color / static_cast<Float>(sample_per_pixel_);
 }

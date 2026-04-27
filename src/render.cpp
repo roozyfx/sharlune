@@ -7,7 +7,7 @@ void render(std::unique_ptr<Camera> camera, std::unique_ptr<Film> film,
             ColorFunction color_function) {
   // Render loop
   for (size_t y = 0; y < camera->image_height(); ++y) {
-    auto progress = float(y * 100) / camera->image_height();
+    auto progress = float(y * 100) / static_cast<float>(camera->image_height());
     std::cout << "Progress: " << progress << "%\n";
 
     std::vector<int> row;
