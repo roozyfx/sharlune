@@ -3,19 +3,18 @@
 
 #include "render.h"
 void render(std::unique_ptr<Camera> camera, std::unique_ptr<Film> film,
-            const std::shared_ptr<Hittables>& world,
-            ColorFunction color_function) {
+            const std::shared_ptr<Hittables>& world) {
   // Render loop
   for (size_t y = 0; y < camera->image_height(); ++y) {
     auto progress = float(y * 100) / static_cast<float>(camera->image_height());
-    std::cout << "Progress: " << progress << "%\n";
+    if ((y % 20) == 0) std::cout << "Progress: " << progress << "%\n";
 
     std::vector<int> row;
     row.reserve(camera->image_width() * film->num_channels());
 
     for (size_t x = 0; x < camera->image_width(); ++x) {
-      Color pixel_color = film->max_val() * camera->sample_pixel_color(
-                                                x, y, world, color_function);
+      Color pixel_color =
+          film->max_val() * camera->sample_pixel_color(x, y, world);
       camera->write_pixel(std::move(pixel_color), row);
     }
 

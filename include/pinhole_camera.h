@@ -45,9 +45,9 @@ class PinholeCamera : public Camera {
     for (const auto &el : row) data_.push_back(el);
   }
 
-  Color sample_pixel_color(const size_t x, const size_t y,
-                           const std::shared_ptr<Hittables> &world,
-                           ColorFunction color_function) const override;
+  Color sample_pixel_color(
+      const size_t x, const size_t y,
+      const std::shared_ptr<Hittables> &world) const override;
 
  private:
   constexpr const Point3 pixel00_center_loc() const {
@@ -65,6 +65,9 @@ class PinholeCamera : public Camera {
   inline Vec3 ray_direction(const Point3 &pixel_center) const {
     return pixel_center - cam_center_;
   }
+
+  Color ray_color(const Ray &r, const std::shared_ptr<Hittables> &world,
+                  size_t depth) const;
 
   Point3 cam_center_ = Point3(0., 0., 0.);
   size_t image_width_{800};
