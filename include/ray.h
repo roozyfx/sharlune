@@ -9,8 +9,11 @@ class Ray {
   Vec3 dir_;
 
  public:
+  Ray() : origin_{Point3{}}, dir_{Vec3{}} {}
   explicit Ray(const Point3& origin, const Vec3& direction)
       : origin_{origin}, dir_{direction} {}
+  Ray(const Ray&) = default;
+  Ray& operator=(const Ray&) = default;
   ~Ray() = default;
 
   inline Point3 at(const Float time) const { return origin_ + time * dir_; }
