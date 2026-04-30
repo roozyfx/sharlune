@@ -69,6 +69,7 @@ class Tuple : public TupleData<N>, public Skills<Tuple<N, Tag, Skills...>>... {
  public:
   static constexpr size_t Dim = N;
 
+  Tuple() {}
   template <typename... Args>
     requires(sizeof...(Args) == N and
              (std::is_convertible_v<Args, Float> and ...))
@@ -206,6 +207,24 @@ class HasL2Distance {
   }
 };
 
+/* Element-wise product (mainly for colors)*/
+template <typename Derived>
+class HadamardProductable {
+  friend Derived hadamard_product(const Derived &c1, const Derived c2,
+                                  const size_t max_val = 255) {
+    Derived c3;
+    c3.x = c1.x * c2.x / static_cast<Float>(max_val);
+    c3.y = c1.y * c2.y / static_cast<Float>(max_val);
+    if constexpr (Derived::Dim == 3)
+      c3.z = c1.z * c2.z / static_cast<Float>(max_val);
+    if constexpr (Derived::Dim == 4) {
+      c3.z = c1.z * c2.z / static_cast<Float>(max_val);
+      c3.w = c1.w * c2.w / static_cast<Float>(max_val);
+    }
+    return c3;
+  }
+};
+
 template <typename Derived>
 class Printable {
   friend std::ostream &operator<<(std::ostream &o, const Derived &d) {
@@ -236,6 +255,13 @@ class CrossProductable {
   }
 };
 
+template <typename Derived>
+// TODO name better!
+class ReflectRefractable {
+  friend Derived reflect(const Derived &v, const Derived normal) {
+    return v - dot(v, normal) * normal;
+  }
+};
 // Trait to safely extract the dimension of a Tuple even if incomplete
 template <typename T>
 struct DimensionOf;
@@ -321,15 +347,15 @@ struct PointDifferenceable {
   };
 };
 
-using Vec2 =
-    Tuple<2, struct VectorTag, Addable, Deductable, Multipliable, Divideable,
-          Negateable, Printable, HasL2Distance, DotProductable>;
+using Vec2 = Tuple<2, struct VectorTag, Addable, Deductable, Multipliable,
+                   Divideable, Negateable, Printable, HasL2Distance,
+                   DotProductable, ReflectRefractable>;
 using Vec3 = Tuple<3, struct VectorTag, Addable, Deductable, Multipliable,
                    Divideable, Negateable, Printable, HasL2Distance,
-                   DotProductable, CrossProductable>;
-using Vec4 =
-    Tuple<4, struct VectorTag, Addable, Deductable, Multipliable, Divideable,
-          Negateable, Printable, HasL2Distance, DotProductable>;
+                   DotProductable, CrossProductable, ReflectRefractable>;
+using Vec4 = Tuple<4, struct VectorTag, Addable, Deductable, Multipliable,
+                   Divideable, Negateable, Printable, HasL2Distance,
+                   DotProductable, ReflectRefractable>;
 
 using Point2 = Tuple<2, struct PointTag, Negateable, Printable, Translateable,
                      PointDifferenceable<Vec2>::Skill>;
@@ -338,9 +364,9 @@ using Point3 = Tuple<3, struct PointTag, Negateable, Printable, Translateable,
 using Point4 = Tuple<4, struct PointTag, Negateable, Printable, Translateable,
                      PointDifferenceable<Vec4>::Skill>;
 
-using Color =
-    Tuple<3, struct ColorTag, Printable, Addable, Multipliable, Divideable>;
-using Color4 =
-    Tuple<4, struct ColorTag, Printable, Addable, Multipliable, Divideable>;
+using Color = Tuple<3, struct ColorTag, Printable, Addable, Multipliable,
+                    Divideable, HadamardProductable>;
+using Color4 = Tuple<4, struct ColorTag, Printable, Addable, Multipliable,
+                     Divideable, HadamardProductable>;
 
 #endif  // INCLUDE_VECTOR_MATH_H_
