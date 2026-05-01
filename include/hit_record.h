@@ -1,14 +1,16 @@
 #ifndef INCLUDE_HIT_RECORD_H_
 #define INCLUDE_HIT_RECORD_H_
+
 #include "common.h"
+#include "material.h"
 #include "ray.h"
 #include "vectormath.h"
-
 struct HitRecord {
   Point3 p{Point3{INF, INF, INF}};
   Vec3 n{Vec3(INF, INF, INF)};
   Float t{INF};
   bool front_face;
+  Material material;
 
   HitRecord() = default;
   explicit HitRecord(Point3 hit_point, Vec3 normal, Float time)
