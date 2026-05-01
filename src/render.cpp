@@ -1,9 +1,9 @@
 #include <iostream>
-#include <memory>
 
 #include "render.h"
-void render(std::unique_ptr<Camera> camera, std::unique_ptr<Film> film,
-            const std::shared_ptr<Hittables>& world) {
+#include "types.h"
+
+void render(UPtr<Camera> camera, UPtr<Film> film,
   // Render loop
   for (size_t y = 0; y < camera->image_height(); ++y) {
     auto progress = float(y * 100) / static_cast<float>(camera->image_height());

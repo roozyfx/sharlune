@@ -4,9 +4,9 @@
 
 #include "camera.h"
 #include "film.h"
-#include "hittables.h"
+#include "types.h"
 
-void render(std::unique_ptr<Camera> camera, std::unique_ptr<Film> film,
+void render(UPtr<Camera> camera, UPtr<Film> film,
             const std::shared_ptr<Hittables>& world);
 
 #endif  // INCLUDE_RENDER_H_

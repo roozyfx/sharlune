@@ -1,7 +1,7 @@
 #ifndef INCLUDE_SCENE_H_
 #define INCLUDE_SCENE_H_
 
-#include <memory>
+#include "types.h"
 
 #include "hittables.h"
 

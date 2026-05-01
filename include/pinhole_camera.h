@@ -4,6 +4,7 @@
 
 #include "camera.h"
 #include "common.h"
+#include "types.h"
 #include "vectormath.h"
 class PinholeCamera : public Camera {
  public:
@@ -45,9 +46,8 @@ class PinholeCamera : public Camera {
     for (const auto &el : row) data_.push_back(el);
   }
 
-  Color sample_pixel_color(
-      const size_t x, const size_t y,
-      const std::shared_ptr<Hittables> &world) const override;
+  Color sample_pixel_color(const size_t x, const size_t y,
+                           const Ptr<RenderNodes> &world) const override;
 
  private:
   constexpr const Point3 pixel00_center_loc() const {
@@ -66,7 +66,7 @@ class PinholeCamera : public Camera {
     return pixel_center - cam_center_;
   }
 
-  Color ray_color(const Ray &r, const std::shared_ptr<Hittables> &world,
+  Color ray_color(const Ray &r, const Ptr<RenderNodes> &world,
                   size_t depth) const;
 
   Point3 cam_center_ = Point3(0., 0., 0.);

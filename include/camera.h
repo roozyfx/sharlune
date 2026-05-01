@@ -1,16 +1,11 @@
 #ifndef INCLDUE_CAMERA_H_
 #define INCLDUE_CAMERA_H_
 #include <cmath>
-#include <functional>
-#include <memory>
 #include <vector>
 
 #include "common.h"
-#include "hittables.h"
+#include "types.h"
 #include "vectormath.h"
-
-using ColorFunction = std::function<Color(
-    const Ray &r, std::shared_ptr<Hittables> world, size_t depth)>;
 
 /* Camera Interface */
 class Camera {

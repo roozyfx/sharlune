@@ -1,5 +1,4 @@
 #include <exception>
-#include <memory>
 #include <print>
 #include <variant>
 
@@ -22,9 +21,9 @@ Color PinholeCamera::ray_color(const Ray& r,
   HitRecord rec;
   // Set the min interval to slightly larger than 0, to prevent 'trapped'
   // bounces due to floating-point rounding error.
-  if (world->hit_all(r, Interval(0.001, std::numeric_limits<Float>::max()),
+  if (world and
+      world->hit_all(r, Interval(0.001, std::numeric_limits<Float>::max()),
                      rec)) {
-    // Vec3 direction = rec.n + random_unit_vector();
     Ray scattered_ray;
     Color attenuation;
 

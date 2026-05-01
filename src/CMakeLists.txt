@@ -28,7 +28,9 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     )
   elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   target_compile_options(${PROJECT_LIBRARY_NAME} PRIVATE
-      -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-weak-vtables -Wno-c++20-extensions
+      -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-weak-vtables -Wno-c++20-extensions -Wno-padded
+      # TODO remove and fix warnings
+    -Wno-unsafe-buffer-usage
       $<$<CONFIG:Debug>:-g;-O0;-fsanitize=address,undefined;-Wfloat-equal;-fno-omit-frame-pointer>
       $<$<CONFIG:Release>:-O3;-march=native;-DNDEBUG>
   )

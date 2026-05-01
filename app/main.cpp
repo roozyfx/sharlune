@@ -1,7 +1,7 @@
 #include <cstdlib>
 #include <memory>
+#include <utility>
 
-#include "color_functions.h"
 #include "film.h"
 #include "pinhole_camera.h"
 #include "ppm.h"
