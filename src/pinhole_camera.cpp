@@ -15,7 +15,7 @@ Point3 PinholeCamera::pixel_sample(const size_t x, const size_t y) const {
                 center.y + random_number(-half_v, half_v), -focal_length_);
 }
 
-Color PinholeCamera::ray_color(const Ray& r, const Ptr<RenderNodes>& world,
+Color PinholeCamera::ray_color(const Ray& r, Ptr<RenderNodes> world,
                                size_t depth) const {
   if (depth == 0) return Color();
   HitRecord rec;
@@ -50,7 +50,7 @@ Color PinholeCamera::ray_color(const Ray& r, const Ptr<RenderNodes>& world,
 }
 
 Color PinholeCamera::sample_pixel_color(const size_t x, const size_t y,
-                                        const Ptr<RenderNodes>& world) const {
+                                        Ptr<RenderNodes> world) const {
   Color pixel_color;
   for (size_t sample_num = 0; sample_num < sample_per_pixel_; ++sample_num) {
     // TODO Bring the following 3 variables out of the loop

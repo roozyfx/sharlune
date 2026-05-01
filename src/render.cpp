@@ -4,8 +4,7 @@
 #include "render_nodes.h"
 #include "types.h"
 
-void render(UPtr<Camera> camera, UPtr<Film> film,
-            const Ptr<RenderNodes>& world) {
+void render(UPtr<Camera> camera, UPtr<Film> film, Ptr<RenderNodes> world) {
   // Render loop
   for (size_t y = 0; y < camera->image_height(); ++y) {
     auto progress = float(y * 100) / static_cast<float>(camera->image_height());

@@ -47,7 +47,7 @@ class PinholeCamera : public Camera {
   }
 
   Color sample_pixel_color(const size_t x, const size_t y,
-                           const Ptr<RenderNodes> &world) const override;
+                           Ptr<RenderNodes> world) const override;
 
  private:
   constexpr const Point3 pixel00_center_loc() const {
@@ -66,16 +66,15 @@ class PinholeCamera : public Camera {
     return pixel_center - cam_center_;
   }
 
-  Color ray_color(const Ray &r, const Ptr<RenderNodes> &world,
-                  size_t depth) const;
+  Color ray_color(const Ray &r, Ptr<RenderNodes> world, size_t depth) const;
 
   Point3 cam_center_ = Point3(0., 0., 0.);
   size_t image_width_{800};
   Float aspect_ratio_{16. / 9.};
   size_t image_height_ = static_cast<size_t>
       (std::max(static_cast<Float>(image_width_) / aspect_ratio_, 1.));
-  size_t sample_per_pixel_{100};
-  size_t max_depth_{10};
+  size_t sample_per_pixel_{10};
+  size_t max_depth_{4};
 
   Float focal_length_{1.};
   Float viewport_height_{2.0};
