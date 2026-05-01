@@ -5,7 +5,6 @@
 
 #include "common.h"
 #include "render_nodes.h"
-#include "types.h"
 #include "vectormath.h"
 
 /* Camera Interface */

@@ -7,8 +7,6 @@
 #include "rng.h"
 #include "vectormath.h"
 
-static bool b_lambert{true};
-static bool b_metal{true};
 struct Scatter {
   bool operator()(const Metal &material, const Ray &in_ray,
                   const HitRecord &rec, Color &attenuation,
