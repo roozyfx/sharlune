@@ -6,6 +6,7 @@
 #include "render_nodes.h"
 #include "types.h"
 
-void render(UPtr<Camera> camera, UPtr<Film> film, Ptr<RenderNodes> world);
+void render(UPtr<Camera> camera, UPtr<Film> film,
+            const RenderNodes* const world);
 
 #endif  // INCLUDE_RENDER_H_

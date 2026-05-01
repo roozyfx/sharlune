@@ -20,7 +20,7 @@ class Camera {
   virtual void write_pixel(Color &&color, std::vector<int> &row) = 0;
   virtual void write_line(const std::vector<int> &row) = 0;
   virtual Color sample_pixel_color(const size_t x, const size_t y,
-                                   Ptr<RenderNodes> world) const = 0;
+                                   const RenderNodes *const world) const = 0;
 
  protected:
   inline void linear_to_gamma(Color &&color) const {

@@ -26,7 +26,7 @@ int main() {
                                  camera->image_height(), max_val, num_channels);
   // Render loop
   if (camera && image && world)
-    render(std::move(camera), std::move(image), std::move(world));
+    render(std::move(camera), std::move(image), world.get());
 
   return EXIT_SUCCESS;
 }
