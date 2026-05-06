@@ -8,6 +8,7 @@ set(src
   pinhole_camera.cpp
   ppm.cpp 
   render.cpp
+  render_nodes.cpp
   rng.cpp
   scatter.cpp
   scene.cpp
