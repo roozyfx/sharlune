@@ -36,7 +36,6 @@ Color PinholeCamera::ray_color(const Ray& r, const RenderNodes* const world,
       return hadamard_product(ray_color(scattered_ray, world, depth - 1),
                               attenuation);
     }
-    return Color(0, 255, 0);
   }
 
   Vec3 unit_direction;
@@ -52,13 +51,15 @@ Color PinholeCamera::ray_color(const Ray& r, const RenderNodes* const world,
 Color PinholeCamera::sample_pixel_color(const size_t x, const size_t y,
                                         const RenderNodes* const world) const {
   Color pixel_color;
+  Point3 sample;
+  Vec3 dir;
+  Ray r;
   for (size_t sample_num = 0; sample_num < sample_per_pixel_; ++sample_num) {
-    // TODO Bring the following 3 variables out of the loop
-    Point3 sample = pixel_sample(x, y);
-    Vec3 dir = ray_direction(sample);
-    Ray r(cam_center_, dir);
+    sample = pixel_sample(x, y);
+    dir = ray_direction(sample);
+    r.origin(cam_center_);
+    r.direction(dir);
     pixel_color += ray_color(r, world, max_depth_);
-    // pixel_color += color_function(r, world, max_depth_);
     // Do Gamma correction on the pixel color
     // TODO Resolve problem (scale)
     /*

@@ -17,8 +17,12 @@ class Ray {
   ~Ray() = default;
 
   inline Point3 at(const Float time) const { return origin_ + time * dir_; }
+
   inline const Vec3& direction() const { return dir_; }
+  inline void direction(const Vec3& d) { dir_ = d; }
+
   inline const Point3& origin() const { return origin_; }
+  inline void origin(const Point3& o) { origin_ = o; }
 };
 
 #endif
