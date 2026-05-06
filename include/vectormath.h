@@ -205,6 +205,15 @@ class HasL2Distance {
       throw std::runtime_error("input vector has a length very close to 0.");
     return v / length(v);
   }
+
+  friend bool near_zero(const Derived &v) {
+    bool result = std::abs(v.x) < VERY_SMALL and std::abs(v.y) < VERY_SMALL;
+    if constexpr (Derived::Dim == 3) result &= std::abs(v.z) < VERY_SMALL;
+    if constexpr (Derived::Dim == 4)
+      result &= (std::abs(v.z) < VERY_SMALL and std::abs(v.w) < VERY_SMALL);
+
+    return result;
+  }
 };
 
 /* Element-wise product (mainly for colors)*/
@@ -240,7 +249,7 @@ class DotProductable {
   friend Float dot(const Derived &u, const Derived &v) {
     Float result = u.x * v.x + u.y * v.y;
     if constexpr (Derived::Dim == 3) result += u.z * v.z;
-    if constexpr (Derived::Dim == 4) result += u.z * v.z + u.w * v.w;
+    if constexpr (Derived::Dim == 4) result += (u.z * v.z + u.w * v.w);
     return result;
   }
 };

@@ -7,6 +7,7 @@
 // TODO
 struct Metal {
   Color albedo;
+  Float fuzz;
 };
 struct Lambertian {
   Color albedo;

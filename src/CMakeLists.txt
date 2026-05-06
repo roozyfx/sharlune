@@ -9,6 +9,7 @@ set(src
   ppm.cpp 
   render.cpp
   rng.cpp
+  scatter.cpp
   scene.cpp
 )
 
