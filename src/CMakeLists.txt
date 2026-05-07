@@ -5,6 +5,7 @@ find_package(Threads REQUIRED)
 set(src
   hit_strategies.cpp
   interval.cpp
+  material.cpp
   pinhole_camera.cpp
   ppm.cpp 
   render.cpp

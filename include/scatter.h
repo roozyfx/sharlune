@@ -12,6 +12,9 @@ struct Scatter {
 
   bool operator()(const Lambertian &material, const Ray &, const HitRecord &rec,
                   Color &attenuation, Ray &out_ray) const;
+
+  bool operator()(const Dielectric &material, const Ray &, const HitRecord &rec,
+                  Color &attenuation, Ray &out_ray) const;
 };
 
 #endif  // INCLUDE_SCATTER_H_

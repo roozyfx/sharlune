@@ -13,6 +13,13 @@ struct Lambertian {
   Color albedo;
 };
 
-using Material = std::variant<Metal, Lambertian>;
+struct Dielectric {
+  Color albedo;
+  Float refraction_index;
+
+  static double reflectance(double cosine, double refraction_index);
+};
+
+using Material = std::variant<Metal, Lambertian, Dielectric>;
 
 #endif  // INCLUDE_COLOR_FUNCTIONS_H_

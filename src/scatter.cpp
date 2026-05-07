@@ -1,5 +1,7 @@
+#include "material.h"
 #include "rng.h"
 #include "scatter.h"
+#include "vectormath.h"
 
 bool Scatter::operator()(const Metal &material, const Ray &in_ray,
                          const HitRecord &rec, Color &attenuation,
@@ -21,6 +23,30 @@ bool Scatter::operator()(const Lambertian &material, const Ray &,
   }
   out_ray = Ray(rec.p, scatter_direction);
   attenuation = material.albedo;
+
+  return true;
+}
+
+bool Scatter::operator()(const Dielectric &material, const Ray &in_ray,
+                         const HitRecord &rec, Color &attenuation,
+                         Ray &out_ray) const {
+  attenuation = material.albedo;
+  const double ri{rec.front_face ? (1.0 / material.refraction_index)
+                                 : material.refraction_index};
+
+  Vec3 unit_direction = normalize(in_ray.direction());
+  const double cos_theta{std::min(dot(-unit_direction, rec.n), 1.0)};
+  const double sin_theta{std::sqrt(1.0 - cos_theta * cos_theta)};
+
+  const bool cannot_refract{ri * sin_theta > 1.0};
+  Vec3 direction;
+
+  direction = (cannot_refract ||
+               Dielectric::reflectance(cos_theta, ri) > random_number())
+                  ? reflect(unit_direction, rec.n)
+                  : refract(unit_direction, rec.n, ri);
+
+  out_ray = Ray(rec.p, direction);
 
   return true;
 }
