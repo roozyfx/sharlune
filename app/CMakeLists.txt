@@ -1,4 +1,4 @@
-set(MY_RAYTRACER fx_tracer)
+set(MY_RAYTRACER sharlune)
 
 add_executable(${MY_RAYTRACER})
 target_sources(${MY_RAYTRACER} PRIVATE "main.cpp")
@@ -9,7 +9,7 @@ target_compile_options(${MY_RAYTRACER} PRIVATE
 
 target_include_directories(${MY_RAYTRACER} PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
-target_link_libraries(${MY_RAYTRACER} PRIVATE fx_tracer_lib)
+target_link_libraries(${MY_RAYTRACER} PRIVATE sharlune_raytracer_lib)
 target_link_options(${MY_RAYTRACER} PRIVATE
     $<$<CONFIG:Debug>:-fsanitize=address,undefined>
 )

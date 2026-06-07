@@ -1,4 +1,4 @@
-set(PROJECT_LIBRARY_NAME fx_tracer_lib)
+set(PROJECT_LIBRARY_NAME sharlune_raytracer_lib)
 
 find_package(Threads REQUIRED)
 
