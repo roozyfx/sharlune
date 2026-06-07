@@ -6,6 +6,7 @@
 #include <string_view>
 
 #include "common.h"
+#include "configuration.h"
 #include "film.h"
 
 /* An extremely simple PPM Image class*/
@@ -22,6 +23,11 @@ class PPMImage : public Film {
   explicit PPMImage(std::string_view filename, const size_t width,
                     const size_t height, const int max_val,
                     const size_t num_channels = 3);
+
+  explicit PPMImage(const ImageConfig &config, const size_t width,
+                    const size_t height)
+      : PPMImage(config.filename, width, height, config.max_val,
+                 config.num_channels) {}
 
   ~PPMImage() override = default;
 

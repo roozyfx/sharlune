@@ -4,7 +4,9 @@
 
 #include "camera.h"
 #include "common.h"
+#include "configuration.h"
 #include "vectormath.h"
+
 class PinholeCamera : public Camera {
  public:
   explicit PinholeCamera(const Point3 &center, const size_t image_width = 800,
@@ -23,6 +25,11 @@ class PinholeCamera : public Camera {
     data_.reserve(image_height_);
   }
 
+  explicit PinholeCamera(const CameraConfig &config)
+      : PinholeCamera(config.center, config.image_width, config.aspect_ratio,
+                      config.focal_length, config.viewport_height,
+                      config.sample_per_pixel, config.max_depth) {}
+
   ~PinholeCamera() override = default;
 
   inline constexpr Point3 center() const override { return cam_center_; }
@@ -31,14 +38,14 @@ class PinholeCamera : public Camera {
     return image_height_;
   }
 
-  inline DataStorage &data() override { return data_; }
+ inline DataStorage &data() override { return data_; }
 
-  // TODO Improve efficiency
-  inline void write_pixel(Color &&color, std::vector<int> &row) override {
-    row.push_back(static_cast<int>(color.x));
-    row.push_back(static_cast<int>(color.y));
-    row.push_back(static_cast<int>(color.z));
-  }
+ // TODO Improve efficiency
+ inline void write_pixel(Color &&color, std::vector<int> &row) override {
+   row.push_back(static_cast<int>(color.x));
+   row.push_back(static_cast<int>(color.y));
+   row.push_back(static_cast<int>(color.z));
+ }
 
   // TODO Improve efficiency
   inline void write_line(const DataStorage &row) override {
@@ -74,7 +81,7 @@ class PinholeCamera : public Camera {
   size_t image_height_ = static_cast<size_t>
       (std::max(static_cast<Float>(image_width_) / aspect_ratio_, 1.));
   size_t sample_per_pixel_{10};
-  size_t max_depth_{4};
+  size_t max_depth_{7};
 
   Float focal_length_{1.};
   Float viewport_height_{2.0};
