@@ -8,7 +8,9 @@
 
 // Camera specific settings
 struct CameraConfig {
-  Point3 center;
+  Point3 look_from;
+  Point3 look_at;
+  Vec3 v_up;
   size_t image_width;
   size_t image_height;
   double aspect_ratio;

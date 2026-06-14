@@ -9,26 +9,48 @@
 
 class PinholeCamera : public Camera {
  public:
-  explicit PinholeCamera(const Point3 &center, const size_t image_width = 800,
+  explicit PinholeCamera(const Point3 &look_from, const Point3 &look_at,
+                         const Vec3 &v_up, const size_t image_width = 800,
                          const Float aspect_ratio = 16. / 9.,
-                         const Float focal_length = 1.,
                          const Float vertical_fov = 90.,
                          const size_t sample_per_pixel = 100,
                          const size_t max_depth = 50)
-      : cam_center_(center),
+      : cam_center_(look_from),
+        cam_look_at_(look_at),
+        cam_v_up_(v_up),
         image_width_(image_width),
         aspect_ratio_(aspect_ratio),
+        vertical_fov_(vertical_fov),
         sample_per_pixel_(sample_per_pixel),
-        max_depth_(max_depth),
-        focal_length_(focal_length),
-        vertical_fov_(vertical_fov) {
+        max_depth_(max_depth) {
+    image_height_ = static_cast<size_t>(
+        std::max(static_cast<Float>(image_width_) / aspect_ratio_, 1.));
+    focal_length_ = length(cam_center_ - cam_look_at_);
+    // Calculate the u,v,w unit basis vectors for the camera coordinate frame.
+    w_ = normalize(cam_center_ - cam_look_at_);
+    u_ = normalize(cross(cam_v_up_, w_));
+    v_ = cross(w_, u_);
+
+    viewport_height_ = vfov2veiwport_height(vertical_fov_, focal_length_);
+    viewport_width_ = viewport_height_ *
+                      (double(image_width_) / static_cast<Float>(image_width_));
+
+    viewport_u_ = viewport_width_ * u_;
+    viewport_v_ = -viewport_height_ * v_;
+
+    u_length_ = viewport_width_ / static_cast<Float>(image_width_);
+    v_length_ = viewport_height_ / static_cast<Float>(image_height_);
+    d_u_ = Vec3(u_length_, 0, 0);
+    d_v_ = Vec3(0, -v_length_, 0);
+
     data_.reserve(image_height_);
   }
 
   explicit PinholeCamera(const CameraConfig &config)
-      : PinholeCamera(config.center, config.image_width, config.aspect_ratio,
-                      config.focal_length, config.vertical_fov,
-                      config.sample_per_pixel, config.max_depth) {}
+      : PinholeCamera(config.look_from, config.look_at, config.v_up,
+                      config.image_width, config.aspect_ratio,
+                      config.vertical_fov, config.sample_per_pixel,
+                      config.max_depth) {}
 
   ~PinholeCamera() override = default;
 
@@ -57,7 +79,7 @@ class PinholeCamera : public Camera {
 
  private:
   constexpr const Point3 pixel00_center_loc() const {
-    const Point3 viewport_top_left = cam_center_ + Vec3(0, 0, -focal_length_) -
+    const Point3 viewport_top_left = cam_center_ - focal_length_ * w_ -
                                      viewport_u_ * 0.5 - viewport_v_ * 0.5;
     return viewport_top_left + d_u_ * 0.5 + d_v_ * 0.5;
   }
@@ -83,12 +105,13 @@ class PinholeCamera : public Camera {
   }
 
   Point3 cam_center_ = Point3(0., 0., 0.);
+  Point3 cam_look_at_ = Point3(0., 0., -1.);
+  Vec3 cam_v_up_ = Vec3(0., 1., 0.);
+
   size_t image_width_{800};
   Float aspect_ratio_{16. / 9.};
-  size_t image_height_ = static_cast<size_t>
-      (std::max(static_cast<Float>(image_width_) / aspect_ratio_, 1.));
-  size_t sample_per_pixel_{10};
-  size_t max_depth_{7};
+  size_t image_height_ = static_cast<size_t>(
+      std::max(static_cast<Float>(image_width_) / aspect_ratio_, 1.));
 
   Float focal_length_{1.};
   Float vertical_fov_{90.};
@@ -102,7 +125,10 @@ class PinholeCamera : public Camera {
   Float v_length_{viewport_height_ / image_height_};
   Vec3 d_u_{Vec3(u_length_, 0, 0)};
   Vec3 d_v_{Vec3(0, -v_length_, 0)};
+  Vec3 u_, v_, w_;
 
+  size_t sample_per_pixel_{10};
+  size_t max_depth_{7};
   DataStorage data_{};
 };
 

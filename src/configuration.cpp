@@ -18,14 +18,32 @@ Configuration loadConfig(const std::string& filepath) {
   toml::table tbl = std::move(result.table());
 
   // Parse [Camera]
-  // Safely extract the center array
-  auto center_arr = tbl["Camera"]["center"].as_array();
-  if (center_arr && center_arr->size() == 3) {
-    config.camera.center =
-        Point3{center_arr->at(0).value_or(0.0), center_arr->at(1).value_or(0.0),
-               center_arr->at(2).value_or(0.0)};
+  // Safely extract the look_from array
+  auto look_from_array = tbl["Camera"]["look_from"].as_array();
+  if (look_from_array && look_from_array->size() == 3) {
+    config.camera.look_from = Point3{look_from_array->at(0).value_or(0.0),
+                                     look_from_array->at(1).value_or(0.0),
+                                     look_from_array->at(2).value_or(0.0)};
   } else {
-    config.camera.center = Point3{0.0, 0.0, 0.0};  // Default fallback
+    config.camera.look_from = Point3{0.0, 0.0, 0.0};  // Default fallback
+  }
+  // Safely extract the look_at array
+  auto look_at_array = tbl["Camera"]["look_at"].as_array();
+  if (look_at_array && look_at_array->size() == 3) {
+    config.camera.look_at = Point3{look_at_array->at(0).value_or(0.0),
+                                   look_at_array->at(1).value_or(0.0),
+                                   look_at_array->at(2).value_or(0.0)};
+  } else {
+    config.camera.look_at = Point3{0.0, 0.0, -1.0};  // Default fallback
+  }
+  // Safely extract the v_up array
+  auto v_up_array = tbl["Camera"]["v_up"].as_array();
+  if (v_up_array && v_up_array->size() == 3) {
+    config.camera.v_up =
+        Vec3{v_up_array->at(0).value_or(0.0), v_up_array->at(1).value_or(0.0),
+             v_up_array->at(2).value_or(0.0)};
+  } else {
+    config.camera.v_up = Vec3{0.0, 1.0, 0.0};  // Default fallback
   }
 
   config.camera.image_width =

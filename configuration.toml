@@ -9,8 +9,10 @@ sample_per_pixel = 10
 max_depth = 7
 focal_length = 1.0
 # vertical field of view in degrees
-vertical_fov = 90.0
-center = [0.0, 0.0, 0.0]
+vertical_fov = 65.0
+look_from = [0.0, 0.0, 1.0]
+look_at = [0.0, 0.0, -1.0]
+v_up = [0.0, 1.0, 0.0]
 
 [Image]
 filename = "spheres.ppm"
