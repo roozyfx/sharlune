@@ -15,7 +15,7 @@ struct CameraConfig {
   size_t sample_per_pixel;
   size_t max_depth;
   double focal_length;
-  double viewport_height;
+  double vertical_fov;
 };
 
 // Image settings

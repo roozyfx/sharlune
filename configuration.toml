@@ -8,7 +8,8 @@ aspect_ratio = 1.7777777777777777
 sample_per_pixel = 10
 max_depth = 7
 focal_length = 1.0
-viewport_height = 2.0
+# vertical field of view in degrees
+vertical_fov = 90.0
 center = [0.0, 0.0, 0.0]
 
 [Image]

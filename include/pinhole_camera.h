@@ -12,7 +12,7 @@ class PinholeCamera : public Camera {
   explicit PinholeCamera(const Point3 &center, const size_t image_width = 800,
                          const Float aspect_ratio = 16. / 9.,
                          const Float focal_length = 1.,
-                         const Float viewport_height = 2.,
+                         const Float vertical_fov = 90.,
                          const size_t sample_per_pixel = 100,
                          const size_t max_depth = 50)
       : cam_center_(center),
@@ -21,13 +21,13 @@ class PinholeCamera : public Camera {
         sample_per_pixel_(sample_per_pixel),
         max_depth_(max_depth),
         focal_length_(focal_length),
-        viewport_height_(viewport_height) {
+        vertical_fov_(vertical_fov) {
     data_.reserve(image_height_);
   }
 
   explicit PinholeCamera(const CameraConfig &config)
       : PinholeCamera(config.center, config.image_width, config.aspect_ratio,
-                      config.focal_length, config.viewport_height,
+                      config.focal_length, config.vertical_fov,
                       config.sample_per_pixel, config.max_depth) {}
 
   ~PinholeCamera() override = default;
@@ -75,6 +75,13 @@ class PinholeCamera : public Camera {
   Color ray_color(const Ray &r, const RenderNodes *const world,
                   size_t depth) const;
 
+  Float vfov2veiwport_height(const Float vfov, const Float focal_length) const {
+    // Convert to Radians
+    auto theta{0.0174533 * vfov};
+    auto h{std::tan(theta / 2)};
+    return 2 * h * focal_length;
+  }
+
   Point3 cam_center_ = Point3(0., 0., 0.);
   size_t image_width_{800};
   Float aspect_ratio_{16. / 9.};
@@ -84,7 +91,8 @@ class PinholeCamera : public Camera {
   size_t max_depth_{7};
 
   Float focal_length_{1.};
-  Float viewport_height_{2.0};
+  Float vertical_fov_{90.};
+  Float viewport_height_{vfov2veiwport_height(vertical_fov_, focal_length_)};
   Float viewport_width_ = viewport_height_ * static_cast<Float>(image_width_) /
                           static_cast<Float>(image_height_);
   Vec3 viewport_u_{Vec3(viewport_width_, 0, 0)};

@@ -38,8 +38,7 @@ Configuration loadConfig(const std::string& filepath) {
   config.camera.max_depth =
       tbl["Camera"]["max_depth"].value_or(static_cast<size_t>(7));
   config.camera.focal_length = tbl["Camera"]["focal_length"].value_or(1.0);
-  config.camera.viewport_height =
-      tbl["Camera"]["viewport_height"].value_or(2.0);
+  config.camera.vertical_fov = tbl["Camera"]["vertical_fov"].value_or(90.0);
 
   // Parse [Image]
   config.image.filename = tbl["Image"]["filename"].value_or("output.ppm");
