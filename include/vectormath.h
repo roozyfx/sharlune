@@ -106,7 +106,7 @@ class Addable {
 };
 
 template <typename Derived>
-class Deductable {
+class Deductible {
   friend Derived &operator-=(Derived &lhs, const Derived &rhs) {
     lhs.x -= rhs.x;
     lhs.y -= rhs.y;
@@ -126,7 +126,7 @@ class Deductable {
 };
 
 template <typename Derived>
-class Negateable {
+class Negatable {
   friend Derived operator-(Derived val) {
     val.x = -val.x;
     val.y = -val.y;
@@ -165,7 +165,7 @@ class Multipliable {
 };
 
 template <typename Derived>
-class Divideable {
+class Dividable {
   friend Derived &operator/=(Derived &lhs, const Float &k) {
     lhs.x /= k;
     lhs.y /= k;
@@ -365,26 +365,26 @@ struct PointDifferenceable {
   };
 };
 
-using Vec2 = Tuple<2, struct VectorTag, Addable, Deductable, Multipliable,
-                   Divideable, Negateable, Printable, HasL2Distance,
+using Vec2 = Tuple<2, struct VectorTag, Addable, Deductible, Multipliable,
+                   Dividable, Negatable, Printable, HasL2Distance,
                    DotProductable, ReflectRefractable>;
-using Vec3 = Tuple<3, struct VectorTag, Addable, Deductable, Multipliable,
-                   Divideable, Negateable, Printable, HasL2Distance,
+using Vec3 = Tuple<3, struct VectorTag, Addable, Deductible, Multipliable,
+                   Dividable, Negatable, Printable, HasL2Distance,
                    DotProductable, CrossProductable, ReflectRefractable>;
-using Vec4 = Tuple<4, struct VectorTag, Addable, Deductable, Multipliable,
-                   Divideable, Negateable, Printable, HasL2Distance,
+using Vec4 = Tuple<4, struct VectorTag, Addable, Deductible, Multipliable,
+                   Dividable, Negatable, Printable, HasL2Distance,
                    DotProductable, ReflectRefractable>;
 
-using Point2 = Tuple<2, struct PointTag, Negateable, Printable, Translateable,
+using Point2 = Tuple<2, struct PointTag, Negatable, Printable, Translateable,
                      PointDifferenceable<Vec2>::Skill>;
-using Point3 = Tuple<3, struct PointTag, Negateable, Printable, Translateable,
+using Point3 = Tuple<3, struct PointTag, Negatable, Printable, Translateable,
                      PointDifferenceable<Vec3>::Skill>;
-using Point4 = Tuple<4, struct PointTag, Negateable, Printable, Translateable,
+using Point4 = Tuple<4, struct PointTag, Negatable, Printable, Translateable,
                      PointDifferenceable<Vec4>::Skill>;
 
 using Color = Tuple<3, struct ColorTag, Printable, Addable, Multipliable,
-                    Divideable, HadamardProductable>;
+                    Dividable, HadamardProductable>;
 using Color4 = Tuple<4, struct ColorTag, Printable, Addable, Multipliable,
-                     Divideable, HadamardProductable>;
+                     Dividable, HadamardProductable>;
 
 #endif  // INCLUDE_VECTOR_MATH_H_
