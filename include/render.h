@@ -6,6 +6,9 @@
 #include "render_nodes.h"
 #include "types.h"
 
+void render_single_thread(UPtr<Camera> camera, UPtr<Film> film,
+                          const RenderNodes* const world);
+
 void render(UPtr<Camera> camera, UPtr<Film> film,
             const RenderNodes* const world);
 
