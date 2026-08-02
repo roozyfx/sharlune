@@ -1,17 +1,18 @@
 
+#include "hit_strategies.h"
+
 #include <algorithm>
 #include <cmath>
 
 #include "basic_geometries.h"
 #include "common.h"
 #include "hit_record.h"
-#include "hit_strategies.h"
 #include "interval.h"
 #include "ray.h"
 #include "vectormath.h"
 
-bool hit_sphere(const Sphere &s, const Ray &r, const Interval &tt,
-                HitRecord &record) {
+bool hit_sphere(const Sphere& s, const Ray& r, const Interval& tt,
+                HitRecord& record) {
   const auto d = r.direction();
   const auto oc = s.center() - r.origin();
 
@@ -40,8 +41,8 @@ bool hit_sphere(const Sphere &s, const Ray &r, const Interval &tt,
   return true;
 }
 
-bool hit_cube(const Cube &c, const Ray &r, const Interval &tt,
-              HitRecord &record) {
+bool hit_cube(const Cube& c, const Ray& r, const Interval& tt,
+              HitRecord& record) {
   const double half_side{c.side() / 2.0};
   const Point3 center{c.center()};
 

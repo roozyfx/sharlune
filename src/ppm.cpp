@@ -1,7 +1,8 @@
+#include "ppm.h"
+
 #include <iostream>
 
 #include "common.h"
-#include "ppm.h"
 
 PPMImage::PPMImage(std::string_view filename, const size_t width,
                    const size_t height, const int max_val,
@@ -17,7 +18,7 @@ PPMImage::PPMImage(std::string_view filename, const size_t width,
   file_ << "P3\n" << width_ << ' ' << height_ << '\n' << max_val_ << '\n';
 }
 
-void PPMImage::write(const DataStorage &data) {
+void PPMImage::write(const DataStorage& data) {
   if (!file_.is_open()) {
     std::clog << "Could not open file for writing\n";
     return;
@@ -26,7 +27,7 @@ void PPMImage::write(const DataStorage &data) {
   std::clog << "Saving data to " << filename_ << std::endl;
 
   // TODO re-write more efficiently
-  for (auto &row : data) {
+  for (auto& row : data) {
     for (size_t i = 0; i < row.size(); ++i) {
       file_ << row[i] << (i % num_channels_ == num_channels_ - 1 ? '\n' : ' ');
     }

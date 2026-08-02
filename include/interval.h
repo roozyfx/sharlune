@@ -8,7 +8,7 @@ struct Interval {
   Float max{-INF};
 
   Interval() = default;
-  explicit Interval(Float minimum, const Float &maximum)
+  explicit Interval(Float minimum, const Float& maximum)
       : min{minimum}, max{maximum} {}
 
   inline constexpr Float size() const { return max - min; }

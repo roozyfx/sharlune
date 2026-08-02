@@ -15,12 +15,12 @@ struct TupleData;
 template <>
 struct TupleData<2> {
   Float x{}, y{};
-  constexpr const Float &operator[](const size_t i) const {
+  constexpr const Float& operator[](const size_t i) const {
     if (i == 0) return x;
     if (i == 1) return y;
     throw std::logic_error("invalid index");
   }
-  Float &operator[](const size_t i) {
+  Float& operator[](const size_t i) {
     if (i == 0) return x;
     if (i == 1) return y;
     throw std::logic_error("invalid index");
@@ -30,13 +30,13 @@ struct TupleData<2> {
 template <>
 struct TupleData<3> {
   Float x{}, y{}, z{};
-  constexpr const Float &operator[](const size_t i) const {
+  constexpr const Float& operator[](const size_t i) const {
     if (i == 0) return x;
     if (i == 1) return y;
     if (i == 2) return z;
     throw std::logic_error("invalid index");
   }
-  Float &operator[](const size_t i) {
+  Float& operator[](const size_t i) {
     if (i == 0) return x;
     if (i == 1) return y;
     if (i == 2) return z;
@@ -47,14 +47,14 @@ struct TupleData<3> {
 template <>
 struct TupleData<4> {
   Float x{}, y{}, z{}, w{};
-  constexpr const Float &operator[](const size_t i) const {
+  constexpr const Float& operator[](const size_t i) const {
     if (i == 0) return x;
     if (i == 1) return y;
     if (i == 2) return z;
     if (i == 3) return w;
     throw std::logic_error("invalid index");
   }
-  Float &operator[](const size_t i) {
+  Float& operator[](const size_t i) {
     if (i == 0) return x;
     if (i == 1) return y;
     if (i == 2) return z;
@@ -75,10 +75,10 @@ class Tuple : public TupleData<N>, public Skills<Tuple<N, Tag, Skills...>>... {
              (std::is_convertible_v<Args, Float> and ...))
   explicit Tuple(Args... args) : TupleData<N>(static_cast<Float>(args)...) {}
 
-  Tuple(const Tuple &) = default;
-  Tuple &operator=(const Tuple &) = default;
-  Tuple(Tuple &&) = default;
-  Tuple &operator=(Tuple &&) = default;
+  Tuple(const Tuple&) = default;
+  Tuple& operator=(const Tuple&) = default;
+  Tuple(Tuple&&) = default;
+  Tuple& operator=(Tuple&&) = default;
   ~Tuple() = default;
 
   constexpr size_t dimension() const { return N; }
@@ -87,7 +87,7 @@ class Tuple : public TupleData<N>, public Skills<Tuple<N, Tag, Skills...>>... {
 /* CRTP Skills */
 template <typename Derived>
 class Addable {
-  friend Derived &operator+=(Derived &lhs, const Derived &rhs) {
+  friend Derived& operator+=(Derived& lhs, const Derived& rhs) {
     lhs.x += rhs.x;
     lhs.y += rhs.y;
     if constexpr (Derived::Dim == 3) lhs.z += rhs.z;
@@ -99,7 +99,7 @@ class Addable {
     return lhs;
   }
 
-  friend Derived operator+(Derived lhs, const Derived &rhs) {
+  friend Derived operator+(Derived lhs, const Derived& rhs) {
     lhs += rhs;
     return lhs;
   }
@@ -107,7 +107,7 @@ class Addable {
 
 template <typename Derived>
 class Deductible {
-  friend Derived &operator-=(Derived &lhs, const Derived &rhs) {
+  friend Derived& operator-=(Derived& lhs, const Derived& rhs) {
     lhs.x -= rhs.x;
     lhs.y -= rhs.y;
     if constexpr (Derived::Dim == 3) lhs.z -= rhs.z;
@@ -119,7 +119,7 @@ class Deductible {
     return lhs;
   }
 
-  friend Derived operator-(Derived lhs, const Derived &rhs) {
+  friend Derived operator-(Derived lhs, const Derived& rhs) {
     lhs -= rhs;
     return lhs;
   }
@@ -142,7 +142,7 @@ class Negatable {
 
 template <typename Derived>
 class Multipliable {
-  friend Derived &operator*=(Derived &lhs, const Float &k) {
+  friend Derived& operator*=(Derived& lhs, const Float& k) {
     lhs.x *= k;
     lhs.y *= k;
     if constexpr (Derived::Dim == 3) lhs.z *= k;
@@ -154,19 +154,19 @@ class Multipliable {
     return lhs;
   }
 
-  friend Derived operator*(Derived lhs, const Float &k) {
+  friend Derived operator*(Derived lhs, const Float& k) {
     lhs *= k;
     return lhs;
   }
 
-  friend Derived operator*(const Float &k, const Derived &lhs) {
+  friend Derived operator*(const Float& k, const Derived& lhs) {
     return lhs * k;
   }
 };
 
 template <typename Derived>
 class Dividable {
-  friend Derived &operator/=(Derived &lhs, const Float &k) {
+  friend Derived& operator/=(Derived& lhs, const Float& k) {
     lhs.x /= k;
     lhs.y /= k;
     if constexpr (Derived::Dim == 3) lhs.z /= k;
@@ -178,7 +178,7 @@ class Dividable {
     return lhs;
   }
 
-  friend Derived operator/(Derived lhs, const Float &k) {
+  friend Derived operator/(Derived lhs, const Float& k) {
     lhs /= k;
     return lhs;
   }
@@ -186,27 +186,27 @@ class Dividable {
 
 template <typename Derived>
 class HasL2Distance {
-  friend Float length_squared(const Derived &d) {
+  friend Float length_squared(const Derived& d) {
     Float result = d.x * d.x + d.y * d.y;
     if constexpr (Derived::Dim == 3) result += d.z * d.z;
     if constexpr (Derived::Dim == 4) result += d.z * d.z + d.w * d.w;
     return result;
   }
 
-  friend Float length(const Derived &d) {
+  friend Float length(const Derived& d) {
     if constexpr (std::is_same_v<Float, float>)
       return std::sqrtf(length_squared(d));
 
     return std::sqrt(length_squared(d));
   }
 
-  friend Derived normalize(const Derived &v) {
+  friend Derived normalize(const Derived& v) {
     if (length(v) < std::numeric_limits<Float>::epsilon())
       throw std::runtime_error("input vector has a length very close to 0.");
     return v / length(v);
   }
 
-  friend bool near_zero(const Derived &v) {
+  friend bool near_zero(const Derived& v) {
     bool result = std::abs(v.x) < VERY_SMALL and std::abs(v.y) < VERY_SMALL;
     if constexpr (Derived::Dim == 3) result &= std::abs(v.z) < VERY_SMALL;
     if constexpr (Derived::Dim == 4)
@@ -219,7 +219,7 @@ class HasL2Distance {
 /* Element-wise product (mainly for colors)*/
 template <typename Derived>
 class HadamardProductable {
-  friend Derived hadamard_product(const Derived &c1, const Derived c2,
+  friend Derived hadamard_product(const Derived& c1, const Derived c2,
                                   const size_t max_val = 255) {
     Derived c3;
     c3.x = c1.x * c2.x / static_cast<Float>(max_val);
@@ -236,7 +236,7 @@ class HadamardProductable {
 
 template <typename Derived>
 class Printable {
-  friend std::ostream &operator<<(std::ostream &o, const Derived &d) {
+  friend std::ostream& operator<<(std::ostream& o, const Derived& d) {
     o << d.x << " " << d.y;
     if constexpr (Derived::Dim == 3) o << " " << d.z;
     if constexpr (Derived::Dim == 4) o << " " << d.z << " " << d.w;
@@ -246,7 +246,7 @@ class Printable {
 
 template <typename Derived>
 class DotProductable {
-  friend Float dot(const Derived &u, const Derived &v) {
+  friend Float dot(const Derived& u, const Derived& v) {
     Float result = u.x * v.x + u.y * v.y;
     if constexpr (Derived::Dim == 3) result += u.z * v.z;
     if constexpr (Derived::Dim == 4) result += (u.z * v.z + u.w * v.w);
@@ -256,7 +256,7 @@ class DotProductable {
 
 template <typename Derived>
 class CrossProductable {
-  friend Derived cross(const Derived &u, const Derived &v) {
+  friend Derived cross(const Derived& u, const Derived& v) {
     static_assert(Derived::Dim == 3,
                   "Cross product is only defined for 3D vectors.");
     return Derived(u.y * v.z - u.z * v.y, -u.x * v.z + u.z * v.x,
@@ -267,11 +267,11 @@ class CrossProductable {
 template <typename Derived>
 // TODO name better!
 class ReflectRefractable {
-  friend Derived reflect(const Derived &v, const Derived normal) {
+  friend Derived reflect(const Derived& v, const Derived normal) {
     return v - dot(v, normal) * normal;
   }
 
-  friend Derived refract(const Derived &uv, const Derived &n,
+  friend Derived refract(const Derived& uv, const Derived& n,
                          Float etai_over_etat) {
     auto cos_theta = std::min(dot(-uv, n), 1.0);
     Derived r_out_perp = etai_over_etat * (uv + cos_theta * n);
@@ -297,7 +297,7 @@ class Translateable {
   // (with gcc)
     requires(DimensionOf<Derived>::value == DimensionOf<Vec>::value and
              !std::is_same_v<Derived, Vec>)
-  friend Derived &operator+=(Derived &p, const Vec &v) {
+  friend Derived& operator+=(Derived& p, const Vec& v) {
     p.x += v.x;
     p.y += v.y;
     if constexpr (Derived::Dim == 3) p.z += v.z;
@@ -312,7 +312,7 @@ class Translateable {
   template <typename Vec>
     requires(DimensionOf<Derived>::value == DimensionOf<Vec>::value and
              !std::is_same_v<Derived, Vec>)
-  friend Derived operator+(Derived p, const Vec &v) {
+  friend Derived operator+(Derived p, const Vec& v) {
     p += v;
     return p;
   }
@@ -320,7 +320,7 @@ class Translateable {
   template <typename Vec>
     requires(DimensionOf<Derived>::value == DimensionOf<Vec>::value and
              !std::is_same_v<Derived, Vec>)
-  friend Derived operator+(const Vec &v, Derived p) {
+  friend Derived operator+(const Vec& v, Derived p) {
     p += v;
     return p;
   }
@@ -328,7 +328,7 @@ class Translateable {
   template <typename Vec>
     requires(DimensionOf<Derived>::value == DimensionOf<Vec>::value and
              !std::is_same_v<Derived, Vec>)
-  friend Derived &operator-=(Derived &p, const Vec &v) {
+  friend Derived& operator-=(Derived& p, const Vec& v) {
     p.x -= v.x;
     p.y -= v.y;
     if constexpr (Derived::Dim == 3) p.z -= v.z;
@@ -343,7 +343,7 @@ class Translateable {
   template <typename Vec>
     requires(DimensionOf<Derived>::value == DimensionOf<Vec>::value and
              !std::is_same_v<Derived, Vec>)
-  friend Derived operator-(Derived p, const Vec &v) {
+  friend Derived operator-(Derived p, const Vec& v) {
     p -= v;
     return p;
   }
@@ -353,7 +353,7 @@ template <typename VectorType>
 struct PointDifferenceable {
   template <typename Derived>
   class Skill {
-    friend VectorType operator-(const Derived &lhs, const Derived &rhs) {
+    friend VectorType operator-(const Derived& lhs, const Derived& rhs) {
       if constexpr (Derived::Dim == 2)
         return VectorType(lhs.x - rhs.x, lhs.y - rhs.y);
       if constexpr (Derived::Dim == 3)

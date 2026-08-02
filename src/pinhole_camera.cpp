@@ -1,8 +1,9 @@
+#include "pinhole_camera.h"
+
 #include <exception>
 #include <print>
 #include <variant>
 
-#include "pinhole_camera.h"
 #include "rng.h"
 #include "scatter.h"
 #include "vectormath.h"

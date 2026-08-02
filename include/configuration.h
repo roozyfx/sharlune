@@ -33,6 +33,6 @@ struct Configuration {
   ImageConfig image;
 };
 
-Configuration loadConfig(const std::string &);
+Configuration loadConfig(const std::string&);
 
 #endif  // INCLUDE_CONFIGURATION_H_

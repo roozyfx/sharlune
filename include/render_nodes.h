@@ -16,7 +16,7 @@ class RenderNodes {
  public:
   RenderNodes() : render_nodes_{} {}
 
-  inline void add(NodePtr &&h) { render_nodes_.push_back(std::move(h)); }
+  inline void add(NodePtr&& h) { render_nodes_.push_back(std::move(h)); }
   inline void clear() { render_nodes_.clear(); }
 
   /*
@@ -24,7 +24,7 @@ class RenderNodes {
   nearest object (Hittble) in our list
   */
   // TODO Not a good name, find a better one.
-  bool hit_all(const Ray &r, Interval tt, HitRecord &record) const;
+  bool hit_all(const Ray& r, Interval tt, HitRecord& record) const;
 };
 
 #endif  // INCLUDE_HITTABLES_H_

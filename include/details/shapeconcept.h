@@ -13,7 +13,7 @@ namespace details {
 class HittableConcept {
  public:
   virtual ~HittableConcept() = default;
-  virtual bool hit(const Ray &, const Interval &t, HitRecord &record) const = 0;
+  virtual bool hit(const Ray&, const Interval& t, HitRecord& record) const = 0;
   virtual std::unique_ptr<HittableConcept> clone() const = 0;
 };
 
@@ -23,7 +23,7 @@ class OwningHittableModel : public HittableConcept {
   explicit OwningHittableModel(GeometryT geom, HitStrategy hs)
       : geometry_(std::move(geom)), hit_strategy_(std::move(hs)) {}
 
-  bool hit(const Ray &r, const Interval &t, HitRecord &record) const override {
+  bool hit(const Ray& r, const Interval& t, HitRecord& record) const override {
     return hit_strategy_(geometry_, r, t, record);
   }
 

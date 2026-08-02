@@ -1,3 +1,5 @@
+#include "scene.h"
+
 #include <memory>
 
 #include "basic_geometries.h"
@@ -6,7 +8,6 @@
 #include "material.h"
 #include "render_node.h"
 #include "render_nodes.h"
-#include "scene.h"
 #include "vectormath.h"
 
 UPtr<RenderNodes> create_world() {

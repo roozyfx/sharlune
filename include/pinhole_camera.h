@@ -9,8 +9,8 @@
 
 class PinholeCamera : public Camera {
  public:
-  explicit PinholeCamera(const Point3 &look_from, const Point3 &look_at,
-                         const Vec3 &v_up, const size_t image_width = 800,
+  explicit PinholeCamera(const Point3& look_from, const Point3& look_at,
+                         const Vec3& v_up, const size_t image_width = 800,
                          const Float aspect_ratio = 16. / 9.,
                          const Float vertical_fov = 90.,
                          const size_t sample_per_pixel = 100,
@@ -46,7 +46,7 @@ class PinholeCamera : public Camera {
     data_.reserve(image_height_);
   }
 
-  explicit PinholeCamera(const CameraConfig &config)
+  explicit PinholeCamera(const CameraConfig& config)
       : PinholeCamera(config.look_from, config.look_at, config.v_up,
                       config.image_width, config.aspect_ratio,
                       config.vertical_fov, config.sample_per_pixel,
@@ -60,19 +60,19 @@ class PinholeCamera : public Camera {
     return image_height_;
   }
 
- inline DataStorage &data() override { return data_; }
+  inline DataStorage& data() override { return data_; }
 
- // TODO Improve efficiency
- inline void write_pixel(Color &&color, std::vector<int> &row) override {
-   row.push_back(static_cast<int>(color.x));
-   row.push_back(static_cast<int>(color.y));
-   row.push_back(static_cast<int>(color.z));
- }
+  // TODO Improve efficiency
+  inline void write_pixel(Color&& color, DataRow& row) override {
+    row.push_back(static_cast<int>(color.x));
+    row.push_back(static_cast<int>(color.y));
+    row.push_back(static_cast<int>(color.z));
+  }
 
-  inline void write_line(DataRow &&row) override { data_.push_back(row); }
+  inline void write_line(DataRow&& row) override { data_.push_back(row); }
 
   Color sample_pixel_color(const size_t x, const size_t y,
-                           const RenderNodes *const world) const override;
+                           const RenderNodes* const world) const override;
 
  private:
   constexpr const Point3 pixel00_center_loc() const {
@@ -82,16 +82,17 @@ class PinholeCamera : public Camera {
   }
 
   inline Point3 pixel_center_loc(const size_t x, const size_t y) const {
-    return pixel00_center_loc() + static_cast<Float>(x) * d_u_ + static_cast<Float>(y) * d_v_;
+    return pixel00_center_loc() + static_cast<Float>(x) * d_u_ +
+           static_cast<Float>(y) * d_v_;
   }
 
   Point3 pixel_sample(const size_t x, const size_t y) const;
 
-  inline Vec3 ray_direction(const Point3 &pixel_center) const {
+  inline Vec3 ray_direction(const Point3& pixel_center) const {
     return pixel_center - cam_center_;
   }
 
-  Color ray_color(const Ray &r, const RenderNodes *const world,
+  Color ray_color(const Ray& r, const RenderNodes* const world,
                   size_t depth) const;
 
   Float vfov2veiwport_height(const Float vfov, const Float focal_length) const {

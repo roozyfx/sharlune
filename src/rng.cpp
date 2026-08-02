@@ -1,6 +1,7 @@
+#include "rng.h"
+
 #include <random>
 
-#include "rng.h"
 #include "vectormath.h"
 
 /*
@@ -40,7 +41,7 @@ Vec3 random_unit_vector() {
   }
 }
 
-Vec3 random_on_half_sphere(const Vec3 &normal) {
+Vec3 random_on_half_sphere(const Vec3& normal) {
   auto u{random_unit_vector()};
   return dot(u, normal) > Float(0.) ? u : -u;
 }

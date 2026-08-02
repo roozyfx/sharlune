@@ -24,16 +24,16 @@ class PPMImage : public Film {
                     const size_t height, const int max_val,
                     const size_t num_channels = 3);
 
-  explicit PPMImage(const ImageConfig &config, const size_t width,
+  explicit PPMImage(const ImageConfig& config, const size_t width,
                     const size_t height)
       : PPMImage(config.filename, width, height, config.max_val,
                  config.num_channels) {}
 
   ~PPMImage() override = default;
 
-  PPMImage(const PPMImage &) = delete;
-  PPMImage(PPMImage &&) = default;
-  void write(const DataStorage &data) override;
+  PPMImage(const PPMImage&) = delete;
+  PPMImage(PPMImage&&) = default;
+  void write(const DataStorage& data) override;
 
   constexpr inline size_t width() const { return width_; }
   constexpr inline size_t height() const { return height_; }

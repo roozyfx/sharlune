@@ -1,8 +1,9 @@
 // #include <toml++/impl/table.hpp>
 
+#include "configuration.h"
+
 #include <iostream>
 
-#include "configuration.h"
 #include "vectormath.h"
 
 Configuration loadConfig(const std::string& filepath) {

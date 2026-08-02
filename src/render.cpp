@@ -1,6 +1,7 @@
+#include "render.h"
+
 #include <iostream>
 
-#include "render.h"
 #include "render_nodes.h"
 #include "types.h"
 

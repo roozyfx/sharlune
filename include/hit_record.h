@@ -15,7 +15,7 @@ struct HitRecord {
   HitRecord() = default;
   explicit HitRecord(Point3 hit_point, Vec3 normal, Float time)
       : p(hit_point), n(normal), t(time) {}
-  void setFaceNormal(const Ray &r, Vec3 outward_normal) {
+  void setFaceNormal(const Ray& r, Vec3 outward_normal) {
     front_face = dot(r.direction(), outward_normal) < 0;
     n = front_face ? outward_normal : -outward_normal;
   }
