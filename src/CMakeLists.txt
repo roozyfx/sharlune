@@ -60,7 +60,7 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     )
 endif()
 
-target_link_libraries(${PROJECT_LIBRARY_NAME} PUBLIC Threads::Threads tomlplusplus::tomlplusplus)
+target_link_libraries(${PROJECT_LIBRARY_NAME} PUBLIC Threads::Threads tomlplusplus::tomlplusplus tinyexr)
 
 target_compile_definitions(${PROJECT_LIBRARY_NAME} PRIVATE 
     $<$<CONFIG:Release>:PARALLEL>
