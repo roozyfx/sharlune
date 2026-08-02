@@ -25,7 +25,10 @@ void PPMImage::write(const DataStorage &data) {
 
   std::clog << "Saving data to " << filename_ << std::endl;
 
-  for (size_t i = 0; i < data.size(); ++i) {
-    file_ << data[i] << (i % num_channels_ == num_channels_ - 1 ? '\n' : ' ');
+  // TODO re-write more efficiently
+  for (auto &row : data) {
+    for (size_t i = 0; i < row.size(); ++i) {
+      file_ << row[i] << (i % num_channels_ == num_channels_ - 1 ? '\n' : ' ');
+    }
   }
 }

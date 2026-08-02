@@ -5,7 +5,8 @@
 #include <vector>
 
 using Float = double;
-using DataStorage = std::vector<int>;
+using DataRow = std::vector<int>;
+using DataStorage = std::vector<DataRow>;
 
 constexpr const Float INF = std::numeric_limits<Float>::infinity();
 constexpr const Float PI = static_cast<Float>(std::numbers::pi);

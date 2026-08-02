@@ -69,10 +69,7 @@ class PinholeCamera : public Camera {
    row.push_back(static_cast<int>(color.z));
  }
 
-  // TODO Improve efficiency
-  inline void write_line(DataStorage &&row) override {
-    for (const auto &el : row) data_.push_back(el);
-  }
+  inline void write_line(DataRow &&row) override { data_.push_back(row); }
 
   Color sample_pixel_color(const size_t x, const size_t y,
                            const RenderNodes *const world) const override;
