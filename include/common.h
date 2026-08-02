@@ -5,7 +5,7 @@
 #include <vector>
 
 using Float = double;
-using DataRow = std::vector<int>;
+using DataRow = std::vector<Float>;
 using DataStorage = std::vector<DataRow>;
 
 constexpr const Float INF = std::numeric_limits<Float>::infinity();

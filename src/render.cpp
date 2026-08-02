@@ -16,7 +16,7 @@ void render_single_thread(UPtr<Camera> camera, UPtr<Film> film,
     auto progress = float(y * 100) / static_cast<float>(camera->image_height());
     if ((y % 20) == 0) std::cout << "Progress: " << progress << "%\n";
 
-    std::vector<int> row;
+    DataRow row;
     row.reserve(camera->image_width() * film->num_channels());
 
     for (size_t x = 0; x < camera->image_width(); ++x) {
