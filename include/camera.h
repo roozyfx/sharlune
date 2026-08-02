@@ -17,7 +17,7 @@ class Camera {
   virtual constexpr size_t image_height() const = 0;
   virtual DataStorage &data() = 0;
   virtual void write_pixel(Color &&color, std::vector<int> &row) = 0;
-  virtual void write_line(const std::vector<int> &row) = 0;
+  virtual void write_line(DataStorage &&row) = 0;
   virtual Color sample_pixel_color(const size_t x, const size_t y,
                                    const RenderNodes *const world) const = 0;
 

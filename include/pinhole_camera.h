@@ -70,7 +70,7 @@ class PinholeCamera : public Camera {
  }
 
   // TODO Improve efficiency
-  inline void write_line(const DataStorage &row) override {
+  inline void write_line(DataStorage &&row) override {
     for (const auto &el : row) data_.push_back(el);
   }
 

@@ -20,7 +20,7 @@ void render(UPtr<Camera> camera, UPtr<Film> film,
       camera->write_pixel(std::move(pixel_color), row);
     }
 
-    camera->write_line(row);
+    camera->write_line(std::move(row));
   }
 
   film->write(camera->data());
