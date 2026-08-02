@@ -2,8 +2,8 @@
 #data_type = "double"
 
 [Camera]
-image_width = 160
-image_height = 90
+image_width = 800
+image_height = 450
 aspect_ratio = 1.7777777777777777
 sample_per_pixel = 10
 max_depth = 7

@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.25..4.2)
+cmake_minimum_required(VERSION 3.25..4.4)
 project(fx_tracer         
-        VERSION 0.0.1
+        VERSION 0.1.0
         DESCRIPTION "Learning simple Ray Tracer in C++"
         LANGUAGES CXX)
 
