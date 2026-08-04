@@ -43,34 +43,34 @@ bool hit_sphere(const Sphere& s, const Ray& r, const Interval& tt,
 
 bool hit_cube(const Cube& c, const Ray& r, const Interval& tt,
               HitRecord& record) {
-  const double half_side{c.side() / 2.0};
+  const Float half_side{c.side() / Float(2)};
   const Point3 center{c.center()};
 
   // Extract components into arrays for clean looping
-  double ro[3] = {r.origin().x, r.origin().y, r.origin().z};
-  double rd[3] = {r.direction().x, r.direction().y, r.direction().z};
-  double min_pt[3] = {center.x - half_side, center.y - half_side,
-                      center.z - half_side};
-  double max_pt[3] = {center.x + half_side, center.y + half_side,
-                      center.z + half_side};
+  Float ro[3] = {r.origin().x, r.origin().y, r.origin().z};
+  Float rd[3] = {r.direction().x, r.direction().y, r.direction().z};
+  Float min_pt[3] = {center.x - half_side, center.y - half_side,
+                     center.z - half_side};
+  Float max_pt[3] = {center.x + half_side, center.y + half_side,
+                     center.z + half_side};
 
-  double t_min{-INF};
-  double t_max{INF};
+  Float t_min{-INF};
+  Float t_max{INF};
 
   // Slab Method for Ray-AABB Intersection
   for (int i = 0; i < 3; i++) {
-    if (std::abs(rd[i]) < 1e-8) {
+    if (std::abs(rd[i]) < Float(1e-8)) {
       // Ray is parallel to this axis. If origin is outside the slab, it's a
       // miss.
       if (ro[i] < min_pt[i] || ro[i] > max_pt[i]) {
         return false;
       }
     } else {
-      double invD = 1.0 / rd[i];
-      double t0 = (min_pt[i] - ro[i]) * invD;
-      double t1 = (max_pt[i] - ro[i]) * invD;
+      Float invD = Float(1) / rd[i];
+      Float t0 = (min_pt[i] - ro[i]) * invD;
+      Float t1 = (max_pt[i] - ro[i]) * invD;
 
-      if (invD < 0.0) {
+      if (invD < Float(0)) {
         std::swap(t0, t1);
       }
 
@@ -85,7 +85,7 @@ bool hit_cube(const Cube& c, const Ray& r, const Interval& tt,
   }
 
   // Check Interval
-  double t = t_min;
+  Float t = t_min;
   if (!tt.surrounds(t)) {
     t = t_max;
     if (!tt.surrounds(t)) {
@@ -105,9 +105,9 @@ bool hit_cube(const Cube& c, const Ray& r, const Interval& tt,
   Vec3 local_p(record.p.x - center.x, record.p.y - center.y,
                record.p.z - center.z);
 
-  const double dx{std::abs(local_p.x)};
-  const double dy{std::abs(local_p.y)};
-  const double dz{std::abs(local_p.z)};
+  const Float dx{std::abs(local_p.x)};
+  const Float dy{std::abs(local_p.y)};
+  const Float dz{std::abs(local_p.z)};
 
   if (dx >= dy && dx >= dz) {
     record.n = Vec3(local_p.x > 0 ? 1 : -1, 0, 0);

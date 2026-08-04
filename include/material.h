@@ -17,7 +17,7 @@ struct Dielectric {
   Color albedo;
   Float refraction_index;
 
-  static double reflectance(double cosine, double refraction_index);
+  static Float reflectance(Float cosine, Float refraction_index);
 };
 
 using Material = std::variant<Metal, Lambertian, Dielectric>;

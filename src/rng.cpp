@@ -35,7 +35,7 @@ Vec3 random_unit_vector() {
   while (true) {
     // generate a random vector in [-1, -1] cube
     Vec3 v = random_vec3(-1, 1);
-    if (length_squared(v) >= 1e-160 and length_squared(v) <= 1) {
+    if (length_squared(v) >= Float(1e-160) and length_squared(v) <= 1) {
       return normalize(v);
     }
   }

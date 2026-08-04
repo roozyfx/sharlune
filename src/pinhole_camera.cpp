@@ -10,8 +10,8 @@
 
 Point3 PinholeCamera::pixel_sample(const size_t x, const size_t y) const {
   const auto center{pixel_center_loc(x, y)};
-  const auto half_u{u_length_ * 0.5};
-  const auto half_v{v_length_ * 0.5};
+  const auto half_u{u_length_ * Float(0.5)};
+  const auto half_v{v_length_ * Float(0.5)};
   return Point3(center.x + random_number(-half_u, half_u),
                 center.y + random_number(-half_v, half_v), -focal_length_);
 }
@@ -23,8 +23,8 @@ Color PinholeCamera::ray_color(const Ray& r, const RenderNodes* const world,
   // Set the min interval to slightly larger than 0, to prevent 'trapped'
   // bounces due to floating-point rounding error.
   if (world and
-      world->hit_all(r, Interval(0.001, std::numeric_limits<Float>::max()),
-                     rec)) {
+      world->hit_all(
+          r, Interval(Float(0.001), std::numeric_limits<Float>::max()), rec)) {
     Ray scattered_ray;
     Color attenuation;
 
@@ -45,8 +45,9 @@ Color PinholeCamera::ray_color(const Ray& r, const RenderNodes* const world,
   } catch (std::exception& e) {
     std::println("{}", e.what());
   }
-  auto a = 0.5 * (unit_direction.y + 1.0);
-  return ((1.0 - a) * Color(0., 0., 1.) + a * Color(1., 1.0, 1.0));
+  auto a = Float(0.5) * (unit_direction.y + Float(1));
+  return ((Float(1) - a) * Color(Float(0), Float(0), Float(1)) +
+          a * Color(Float(1), Float(1), Float(1)));
 }
 
 Color PinholeCamera::sample_pixel_color(const size_t x, const size_t y,

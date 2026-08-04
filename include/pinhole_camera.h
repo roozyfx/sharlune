@@ -11,7 +11,7 @@ class PinholeCamera : public Camera {
  public:
   explicit PinholeCamera(const Point3& look_from, const Point3& look_at,
                          const Vec3& v_up, const size_t image_width = 800,
-                         const Float aspect_ratio = 16. / 9.,
+                         const Float aspect_ratio = Float(16) / Float(9),
                          const Float vertical_fov = 90.,
                          const size_t sample_per_pixel = 100,
                          const size_t max_depth = 50)
@@ -24,16 +24,17 @@ class PinholeCamera : public Camera {
         sample_per_pixel_(sample_per_pixel),
         max_depth_(max_depth) {
     image_height_ = static_cast<size_t>(
-        std::max(static_cast<Float>(image_width_) / aspect_ratio_, 1.));
+        std::max(static_cast<Float>(image_width_) / aspect_ratio_, Float(1)));
     focal_length_ = length(cam_center_ - cam_look_at_);
     // Calculate the u,v,w unit basis vectors for the camera coordinate frame.
     w_ = normalize(cam_center_ - cam_look_at_);
     u_ = normalize(cross(cam_v_up_, w_));
     v_ = cross(w_, u_);
 
-    viewport_height_ = vfov2veiwport_height(vertical_fov_, focal_length_);
+    viewport_height_ = vfov2viewport_height(vertical_fov_, focal_length_);
+    // TODO Check this
     viewport_width_ = viewport_height_ *
-                      (double(image_width_) / static_cast<Float>(image_width_));
+                      (Float(image_width_) / static_cast<Float>(image_width_));
 
     viewport_u_ = viewport_width_ * u_;
     viewport_v_ = -viewport_height_ * v_;
@@ -95,10 +96,10 @@ class PinholeCamera : public Camera {
   Color ray_color(const Ray& r, const RenderNodes* const world,
                   size_t depth) const;
 
-  Float vfov2veiwport_height(const Float vfov, const Float focal_length) const {
+  Float vfov2viewport_height(const Float vfov, const Float focal_length) const {
     // Convert to Radians
-    auto theta{0.0174533 * vfov};
-    auto h{std::tan(theta / 2)};
+    auto theta{Float(0.0174533) * vfov};
+    auto h{std::tan(Float(theta) / 2)};
     return 2 * h * focal_length;
   }
 
@@ -107,13 +108,13 @@ class PinholeCamera : public Camera {
   Vec3 cam_v_up_ = Vec3(0., 1., 0.);
 
   size_t image_width_{800};
-  Float aspect_ratio_{16. / 9.};
+  Float aspect_ratio_{Float(16) / Float(9)};
   size_t image_height_ = static_cast<size_t>(
-      std::max(static_cast<Float>(image_width_) / aspect_ratio_, 1.));
+      std::max(static_cast<Float>(image_width_) / aspect_ratio_, Float(1)));
 
   Float focal_length_{1.};
   Float vertical_fov_{90.};
-  Float viewport_height_{vfov2veiwport_height(vertical_fov_, focal_length_)};
+  Float viewport_height_{vfov2viewport_height(vertical_fov_, focal_length_)};
   Float viewport_width_ = viewport_height_ * static_cast<Float>(image_width_) /
                           static_cast<Float>(image_height_);
   Vec3 viewport_u_{Vec3(viewport_width_, 0, 0)};

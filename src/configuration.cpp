@@ -51,13 +51,15 @@ Configuration loadConfig(const std::string& filepath) {
       tbl["Camera"]["image_width"].value_or(static_cast<size_t>(800));
   config.camera.image_height =
       tbl["Camera"]["image_height"].value_or(static_cast<size_t>(450));
-  config.camera.aspect_ratio = tbl["Camera"]["aspect_ratio"].value_or(16. / 9.);
+  config.camera.aspect_ratio =
+      tbl["Camera"]["aspect_ratio"].value_or(Float(16) / Float(9));
   config.camera.sample_per_pixel =
       tbl["Camera"]["sample_per_pixel"].value_or(static_cast<size_t>(10));
   config.camera.max_depth =
       tbl["Camera"]["max_depth"].value_or(static_cast<size_t>(7));
-  config.camera.focal_length = tbl["Camera"]["focal_length"].value_or(1.0);
-  config.camera.vertical_fov = tbl["Camera"]["vertical_fov"].value_or(90.0);
+  config.camera.focal_length = tbl["Camera"]["focal_length"].value_or(Float(1));
+  config.camera.vertical_fov =
+      tbl["Camera"]["vertical_fov"].value_or(Float(90));
 
   // Parse [Image]
   config.image.filename = tbl["Image"]["filename"].value_or("output.ppm");

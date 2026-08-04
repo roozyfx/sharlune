@@ -13,11 +13,11 @@ struct CameraConfig {
   Vec3 v_up;
   size_t image_width;
   size_t image_height;
-  double aspect_ratio;
+  Float aspect_ratio;
   size_t sample_per_pixel;
   size_t max_depth;
-  double focal_length;
-  double vertical_fov;
+  Float focal_length;
+  Float vertical_fov;
 };
 
 // Image settings

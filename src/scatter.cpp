@@ -32,14 +32,14 @@ bool Scatter::operator()(const Dielectric& material, const Ray& in_ray,
                          const HitRecord& rec, Color& attenuation,
                          Ray& out_ray) const {
   attenuation = material.albedo;
-  const double ri{rec.front_face ? (1.0 / material.refraction_index)
-                                 : material.refraction_index};
+  const Float ri{rec.front_face ? (Float(1) / material.refraction_index)
+                                : material.refraction_index};
 
   Vec3 unit_direction = normalize(in_ray.direction());
-  const double cos_theta{std::min(dot(-unit_direction, rec.n), 1.0)};
-  const double sin_theta{std::sqrt(1.0 - cos_theta * cos_theta)};
+  const Float cos_theta{std::min(dot(-unit_direction, rec.n), Float(1))};
+  const Float sin_theta{std::sqrt(Float(1) - cos_theta * cos_theta)};
 
-  const bool cannot_refract{ri * sin_theta > 1.0};
+  const bool cannot_refract{ri * sin_theta > Float(1)};
   Vec3 direction;
 
   direction = (cannot_refract ||

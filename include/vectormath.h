@@ -273,7 +273,7 @@ class ReflectRefractable {
 
   friend Derived refract(const Derived& uv, const Derived& n,
                          Float etai_over_etat) {
-    auto cos_theta = std::min(dot(-uv, n), 1.0);
+    auto cos_theta = std::min(dot(-uv, n), Float(1));
     Derived r_out_perp = etai_over_etat * (uv + cos_theta * n);
     Derived r_out_parallel =
         -std::sqrt(std::abs(1.0 - length_squared(r_out_perp))) * n;
