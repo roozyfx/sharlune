@@ -1,4 +1,4 @@
-#include "ppm.h"
+#include "ppm_image.h"
 
 #include <iostream>
 

@@ -8,7 +8,7 @@ set(src
   interval.cpp
   material.cpp
   pinhole_camera.cpp
-  ppm.cpp 
+  ppm_image.cpp 
   render.cpp
   render_nodes.cpp
   rng.cpp
