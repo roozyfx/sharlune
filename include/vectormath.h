@@ -106,7 +106,7 @@ class Addable {
 };
 
 template <typename Derived>
-class Deductible {
+class Subtractable {
   friend Derived& operator-=(Derived& lhs, const Derived& rhs) {
     lhs.x -= rhs.x;
     lhs.y -= rhs.y;
@@ -193,17 +193,13 @@ class HasL2Distance {
     return result;
   }
 
-  friend Float length(const Derived& d) {
-    if constexpr (std::is_same_v<Float, float>)
-      return std::sqrtf(length_squared(d));
-
-    return std::sqrt(length_squared(d));
-  }
+  friend Float length(const Derived& d) { return std::sqrt(length_squared(d)); }
 
   friend Derived normalize(const Derived& v) {
-    if (length(v) < std::numeric_limits<Float>::epsilon())
+    const Float length_v{length(v)};
+    if (length_v < std::numeric_limits<Float>::epsilon())
       throw std::runtime_error("input vector has a length very close to 0.");
-    return v / length(v);
+    return v / length_v;
   }
 
   friend bool near_zero(const Derived& v) {
@@ -268,7 +264,7 @@ template <typename Derived>
 // TODO name better!
 class ReflectRefractable {
   friend Derived reflect(const Derived& v, const Derived normal) {
-    return v - dot(v, normal) * normal;
+    return v - 2 * dot(v, normal) * normal;
   }
 
   friend Derived refract(const Derived& uv, const Derived& n,
@@ -365,13 +361,13 @@ struct PointDifferenceable {
   };
 };
 
-using Vec2 = Tuple<2, struct VectorTag, Addable, Deductible, Multipliable,
+using Vec2 = Tuple<2, struct VectorTag, Addable, Subtractable, Multipliable,
                    Dividable, Negatable, Printable, HasL2Distance,
                    DotProductable, ReflectRefractable>;
-using Vec3 = Tuple<3, struct VectorTag, Addable, Deductible, Multipliable,
+using Vec3 = Tuple<3, struct VectorTag, Addable, Subtractable, Multipliable,
                    Dividable, Negatable, Printable, HasL2Distance,
                    DotProductable, CrossProductable, ReflectRefractable>;
-using Vec4 = Tuple<4, struct VectorTag, Addable, Deductible, Multipliable,
+using Vec4 = Tuple<4, struct VectorTag, Addable, Subtractable, Multipliable,
                    Dividable, Negatable, Printable, HasL2Distance,
                    DotProductable, ReflectRefractable>;
 
