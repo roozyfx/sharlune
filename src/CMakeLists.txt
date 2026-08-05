@@ -1,6 +1,7 @@
 set(PROJECT_LIBRARY_NAME sharlune_raytracer_lib)
 
 find_package(Threads REQUIRED)
+find_package(OpenEXR REQUIRED)
 
 set(src
   configuration.cpp
@@ -60,7 +61,7 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     )
 endif()
 
-target_link_libraries(${PROJECT_LIBRARY_NAME} PUBLIC Threads::Threads tomlplusplus::tomlplusplus tinyexr)
+target_link_libraries(${PROJECT_LIBRARY_NAME} PUBLIC Threads::Threads tomlplusplus::tomlplusplus OpenEXR::OpenEXR)
 
 target_compile_definitions(${PROJECT_LIBRARY_NAME} PRIVATE 
     $<$<CONFIG:Release>:PARALLEL>
