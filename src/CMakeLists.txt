@@ -5,6 +5,7 @@ find_package(OpenEXR REQUIRED)
 
 set(src
   configuration.cpp
+  exr_image.cpp
   hit_strategies.cpp
   interval.cpp
   material.cpp

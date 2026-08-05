@@ -23,6 +23,7 @@ struct CameraConfig {
 // Image settings
 struct ImageConfig {
   std::string filename;
+  std::string file_format;
   int max_val;
   size_t num_channels;
 };

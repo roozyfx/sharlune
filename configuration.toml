@@ -15,6 +15,7 @@ look_at = [0.0, 0.0, -1.0]
 v_up = [0.0, 1.0, 0.0]
 
 [Image]
-filename = "spheres.ppm"
+filename = "spheres"
+file_format = "exr"
 max_val = 65535
 num_channels = 3

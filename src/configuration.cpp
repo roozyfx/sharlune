@@ -2,6 +2,7 @@
 
 #include "configuration.h"
 
+#include <algorithm>
 #include <iostream>
 
 #include "vectormath.h"
@@ -62,7 +63,13 @@ Configuration loadConfig(const std::string& filepath) {
       tbl["Camera"]["vertical_fov"].value_or(Float(90));
 
   // Parse [Image]
-  config.image.filename = tbl["Image"]["filename"].value_or("output.ppm");
+  config.image.filename = tbl["Image"]["filename"].value_or("output");
+  config.image.file_format = tbl["Image"]["file_format"].value_or("exr");
+  // Add extension to the filename
+  config.image.filename += "." + config.image.file_format;
+  std::for_each(config.image.file_format.begin(),
+                config.image.file_format.end(),
+                [](char c) { return std::tolower(c); });
   config.image.max_val = tbl["Image"]["max_val"].value_or(65535);
   config.image.num_channels =
       tbl["Image"]["num_channels"].value_or(static_cast<size_t>(3));
