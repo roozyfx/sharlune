@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.28...4.4)
 project(fx_tracer         
-        VERSION 0.1.0
-        DESCRIPTION "Learning simple Ray Tracer in C++"
+        VERSION 0.2.0
+        DESCRIPTION "Sharlune: A Ray Tracer in C++"
         LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 23)
