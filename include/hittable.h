@@ -11,13 +11,13 @@ class Hittable {
   template <typename GeometryT, typename HitStrategy>
   explicit Hittable(GeometryT geom, HitStrategy hs) {
     using Model = details::OwningHittableModel<GeometryT, HitStrategy>;
-    pimple_ = std::make_unique<Model>(std::move(geom), std::move(hs));
+    pimpl_ = std::make_unique<Model>(std::move(geom), std::move(hs));
   }
 
-  Hittable(const Hittable& other) : pimple_{other.pimple_->clone()} {}
+  Hittable(const Hittable& other) : pimpl_{other.pimpl_->clone()} {}
   Hittable& operator=(const Hittable& rhs) {
     Hittable copy(rhs);
-    pimple_.swap(copy.pimple_);
+    pimpl_.swap(copy.pimpl_);
     return *this;
   }
 
@@ -26,10 +26,10 @@ class Hittable {
   ~Hittable() = default;
 
  private:
-  std::unique_ptr<details::HittableConcept> pimple_;
+  std::unique_ptr<details::HittableConcept> pimpl_;
   friend bool hit(const Hittable& geom, const Ray& r, const Interval& t,
                   HitRecord& record) {
-    return geom.pimple_->hit(r, t, record);
+    return geom.pimpl_->hit(r, t, record);
   }
 };
 
