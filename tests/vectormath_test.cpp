@@ -82,7 +82,7 @@ TEST(TupleMathTest, Addable) {
   EXPECT_DOUBLE_EQ(v1.w, 12.0);
 }
 
-TEST(TupleMathTest, Deductable) {
+TEST(TupleMathTest, Subtractable) {
   Vec4 v1(10.0, 20.0, 30.0, 40.0);
   Vec4 v2(1.0, 2.0, 3.0, 4.0);
 
@@ -223,6 +223,63 @@ TEST(TupleMathTest, Normalize) {
   EXPECT_DOUBLE_EQ(v4_norm.z, 0.5);
   EXPECT_DOUBLE_EQ(v4_norm.w, 0.5);
   EXPECT_DOUBLE_EQ(length(v4_norm), 1.0);
+}
+
+TEST(TupleMathTest, Reflect) {
+  Vec2 v2(1, -2);
+  Vec2 n2(0, 1);
+  Vec2 reflection2 = reflect(v2, n2);
+
+  EXPECT_DOUBLE_EQ(reflection2.x, 1);
+  EXPECT_DOUBLE_EQ(reflection2.y, 2);
+
+  // both in xy plane
+  Vec3 v3(1.0, -2.0, 0.0);
+  Vec3 n3(0.0, 1.0, 0.0);
+  Vec3 reflection3 = reflect(v3, n3);
+  EXPECT_DOUBLE_EQ(reflection3.x, 1.0);
+  EXPECT_DOUBLE_EQ(reflection3.y, 2.0);
+  EXPECT_DOUBLE_EQ(reflection3.z, 0.0);
+
+  // bounce along z axis
+  v3 = Vec3(0.0, 0.0, -1.0);
+  n3 = Vec3(0.0, 0.0, 1.0);
+  reflection3 = reflect(v3, n3);
+  EXPECT_DOUBLE_EQ(reflection3.x, 0.0);
+  EXPECT_DOUBLE_EQ(reflection3.y, 0.0);
+  EXPECT_DOUBLE_EQ(reflection3.z, 1.0);
+
+  // symmetric off xy plane
+  v3 = Vec3(1.0, 1.0, -1.0);
+  n3 = Vec3(0.0, 0.0, 1.0);
+  reflection3 = reflect(v3, n3);
+  EXPECT_DOUBLE_EQ(reflection3.x, 1.0);
+  EXPECT_DOUBLE_EQ(reflection3.y, 1.0);
+  EXPECT_DOUBLE_EQ(reflection3.z, 1.0);
+
+  // incidence parallel to surface
+  v3 = Vec3(2.0, -1.0, 0.0);
+  n3 = Vec3(0.0, 0.0, 1.0);
+  reflection3 = reflect(v3, n3);
+  EXPECT_DOUBLE_EQ(reflection3.x, 2.0);
+  EXPECT_DOUBLE_EQ(reflection3.y, -1.0);
+  EXPECT_DOUBLE_EQ(reflection3.z, 0.0);
+
+  // Tilted 3d normal
+  v3 = Vec3(0.0, 0.0, -3.0);
+  n3 = Vec3(Float(1) / Float(3), Float(2) / Float(3), Float(2) / Float(3));
+  reflection3 = reflect(v3, n3);
+  EXPECT_DOUBLE_EQ(reflection3.x, Float(4) / Float(3));
+  EXPECT_DOUBLE_EQ(reflection3.y, Float(8) / Float(3));
+  EXPECT_DOUBLE_EQ(reflection3.z, Float(-1) / Float(3));
+
+  // General 3d
+  v3 = Vec3(6.0, -2.0, -3.0);
+  n3 = Vec3(Float(2) / Float(7), Float(3) / Float(7), Float(6) / Float(7));
+  reflection3 = reflect(v3, n3);
+  EXPECT_NEAR(reflection3.x, Float(342) / Float(49), 1e-6);
+  EXPECT_NEAR(reflection3.y, Float(-26) / Float(49), 1e-6);
+  EXPECT_NEAR(reflection3.z, Float(-3) / Float(49), 1e-6);
 }
 // ---------------------------------------------------------
 // Utilities Tests
