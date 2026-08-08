@@ -1,51 +1,12 @@
+#include "vectormath.h"
+
 #include <gtest/gtest.h>
 
 #include <sstream>
-#include <stdexcept>
-
-#include "vectormath.h"
-
-// Assuming your code is included here, e.g., #include "tuple.h"
 
 // ---------------------------------------------------------
 // TupleData & Core Tuple Tests
 // ---------------------------------------------------------
-
-TEST(TupleDataTest, ElementAccess) {
-  Point2 p2(1.5, 2.5);
-  EXPECT_DOUBLE_EQ(p2[0], 1.5);
-  EXPECT_DOUBLE_EQ(p2[1], 2.5);
-
-  Point3 p3(1.0, 2.0, 3.0);
-  EXPECT_DOUBLE_EQ(p3[0], 1.0);
-  EXPECT_DOUBLE_EQ(p3[1], 2.0);
-  EXPECT_DOUBLE_EQ(p3[2], 3.0);
-
-  Vec4 v4(1.0, 2.0, 3.0, 4.0);
-  EXPECT_DOUBLE_EQ(v4[0], 1.0);
-  EXPECT_DOUBLE_EQ(v4[1], 2.0);
-  EXPECT_DOUBLE_EQ(v4[2], 3.0);
-  EXPECT_DOUBLE_EQ(v4[3], 4.0);
-}
-
-TEST(TupleDataTest, OutOfBoundsThrows) {
-  Point2 p2(1.0, 2.0);
-  EXPECT_THROW(p2[2], std::logic_error);
-
-  Point3 p3(1.0, 2.0, 3.0);
-  EXPECT_THROW(p3[3], std::logic_error);
-
-  Vec4 v4(1.0, 2.0, 3.0, 4.0);
-  EXPECT_THROW(v4[4], std::logic_error);
-}
-
-TEST(TupleDataTest, MutateElement) {
-  Vec2 v(0.0, 0.0);
-  v[0] = 5.5;
-  v[1] = 10.1;
-  EXPECT_DOUBLE_EQ(v.x, 5.5);
-  EXPECT_DOUBLE_EQ(v.y, 10.1);
-}
 
 TEST(TupleTest, ConstructorAndDimensions) {
   Vec2 v2(1, 2);

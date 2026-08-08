@@ -6,6 +6,7 @@
 #include <limits>
 #include <ostream>
 #include <stdexcept>
+#include <utility>
 
 #include "common.h"
 
@@ -15,51 +16,81 @@ struct TupleData;
 template <>
 struct TupleData<2> {
   Float x{}, y{};
-  constexpr const Float& operator[](const size_t i) const {
-    if (i == 0) return x;
-    if (i == 1) return y;
-    throw std::logic_error("invalid index");
+
+  template <size_t I>
+  constexpr const Float& get() const noexcept {
+    static_assert(I < 2, "index out of range");
+    if constexpr (I == 0)
+      return x;
+    else
+      return y;
   }
-  Float& operator[](const size_t i) {
-    if (i == 0) return x;
-    if (i == 1) return y;
-    throw std::logic_error("invalid index");
+
+  template <size_t I>
+  Float& get() noexcept {
+    static_assert(I < 2, "index out of range");
+    if constexpr (I == 0)
+      return x;
+    else
+      return y;
   }
 };
 
 template <>
 struct TupleData<3> {
   Float x{}, y{}, z{};
-  constexpr const Float& operator[](const size_t i) const {
-    if (i == 0) return x;
-    if (i == 1) return y;
-    if (i == 2) return z;
-    throw std::logic_error("invalid index");
+
+  template <size_t I>
+  constexpr const Float& get() const noexcept {
+    static_assert(I < 3, "index out of range");
+    if constexpr (I == 0)
+      return x;
+    else if constexpr (I == 1)
+      return y;
+    else
+      return z;
   }
-  Float& operator[](const size_t i) {
-    if (i == 0) return x;
-    if (i == 1) return y;
-    if (i == 2) return z;
-    throw std::logic_error("invalid index");
+
+  template <size_t I>
+  constexpr Float& get() noexcept {
+    static_assert(I < 3, "index out of range");
+    if constexpr (I == 0)
+      return x;
+    else if constexpr (I == 1)
+      return y;
+    else
+      return z;
   }
 };
 
 template <>
 struct TupleData<4> {
   Float x{}, y{}, z{}, w{};
-  constexpr const Float& operator[](const size_t i) const {
-    if (i == 0) return x;
-    if (i == 1) return y;
-    if (i == 2) return z;
-    if (i == 3) return w;
-    throw std::logic_error("invalid index");
+
+  template <size_t I>
+  constexpr const Float& get() const noexcept {
+    static_assert(I < 4, "index out of range");
+    if constexpr (I == 0)
+      return x;
+    else if constexpr (I == 1)
+      return y;
+    else if constexpr (I == 2)
+      return z;
+    else
+      return w;
   }
-  Float& operator[](const size_t i) {
-    if (i == 0) return x;
-    if (i == 1) return y;
-    if (i == 2) return z;
-    if (i == 3) return w;
-    throw std::logic_error("invalid index");
+
+  template <size_t I>
+  constexpr Float& get() noexcept {
+    static_assert(I < 4, "index out of range");
+    if constexpr (I == 0)
+      return x;
+    else if constexpr (I == 1)
+      return y;
+    else if constexpr (I == 2)
+      return z;
+    else
+      return w;
   }
 };
 
@@ -69,7 +100,8 @@ class Tuple : public TupleData<N>, public Skills<Tuple<N, Tag, Skills...>>... {
  public:
   static constexpr size_t Dim = N;
 
-  Tuple() {}
+  Tuple() = default;
+
   template <typename... Args>
     requires(sizeof...(Args) == N and
              (std::is_convertible_v<Args, Float> and ...))
@@ -88,13 +120,9 @@ class Tuple : public TupleData<N>, public Skills<Tuple<N, Tag, Skills...>>... {
 template <typename Derived>
 class Addable {
   friend Derived& operator+=(Derived& lhs, const Derived& rhs) {
-    lhs.x += rhs.x;
-    lhs.y += rhs.y;
-    if constexpr (Derived::Dim == 3) lhs.z += rhs.z;
-    if constexpr (Derived::Dim == 4) {
-      lhs.z += rhs.z;
-      lhs.w += rhs.w;
-    }
+    [&]<size_t... I>(std::index_sequence<I...>) {
+      ((lhs.template get<I>() += rhs.template get<I>()), ...);
+    }(std::make_index_sequence<Derived::Dim>{});
 
     return lhs;
   }
@@ -108,13 +136,9 @@ class Addable {
 template <typename Derived>
 class Subtractable {
   friend Derived& operator-=(Derived& lhs, const Derived& rhs) {
-    lhs.x -= rhs.x;
-    lhs.y -= rhs.y;
-    if constexpr (Derived::Dim == 3) lhs.z -= rhs.z;
-    if constexpr (Derived::Dim == 4) {
-      lhs.z -= rhs.z;
-      lhs.w -= rhs.w;
-    }
+    [&]<size_t... I>(std::index_sequence<I...>) {
+      ((lhs.template get<I>() -= rhs.template get<I>()), ...);
+    }(std::make_index_sequence<Derived::Dim>{});
 
     return lhs;
   }
@@ -128,13 +152,9 @@ class Subtractable {
 template <typename Derived>
 class Negatable {
   friend Derived operator-(Derived val) {
-    val.x = -val.x;
-    val.y = -val.y;
-    if constexpr (Derived::Dim == 3) val.z = -val.z;
-    if constexpr (Derived::Dim == 4) {
-      val.w = -val.w;
-      val.z = -val.z;
-    }
+    [&]<size_t... I>(std::index_sequence<I...>) {
+      ((val.template get<I>() = -val.template get<I>()), ...);
+    }(std::make_index_sequence<Derived::Dim>{});
 
     return val;
   }
@@ -143,23 +163,19 @@ class Negatable {
 template <typename Derived>
 class Multipliable {
   friend Derived& operator*=(Derived& lhs, const Float& k) {
-    lhs.x *= k;
-    lhs.y *= k;
-    if constexpr (Derived::Dim == 3) lhs.z *= k;
-    if constexpr (Derived::Dim == 4) {
-      lhs.z *= k;
-      lhs.w *= k;
-    }
+    [&]<size_t... I>(std::index_sequence<I...>) {
+      ((lhs.template get<I>() *= k), ...);
+    }(std::make_index_sequence<Derived::Dim>{});
 
     return lhs;
   }
 
-  friend Derived operator*(Derived lhs, const Float& k) {
+  friend Derived operator*(Derived lhs, const Float k) {
     lhs *= k;
     return lhs;
   }
 
-  friend Derived operator*(const Float& k, const Derived& lhs) {
+  friend Derived operator*(const Float k, const Derived& lhs) {
     return lhs * k;
   }
 };
@@ -167,18 +183,14 @@ class Multipliable {
 template <typename Derived>
 class Dividable {
   friend Derived& operator/=(Derived& lhs, const Float& k) {
-    lhs.x /= k;
-    lhs.y /= k;
-    if constexpr (Derived::Dim == 3) lhs.z /= k;
-    if constexpr (Derived::Dim == 4) {
-      lhs.z /= k;
-      lhs.w /= k;
-    }
+    [&]<size_t... I>(std::index_sequence<I...>) {
+      ((lhs.template get<I>() /= k), ...);
+    }(std::make_index_sequence<Derived::Dim>{});
 
     return lhs;
   }
 
-  friend Derived operator/(Derived lhs, const Float& k) {
+  friend Derived operator/(Derived lhs, const Float k) {
     lhs /= k;
     return lhs;
   }
@@ -186,12 +198,7 @@ class Dividable {
 
 template <typename Derived>
 class HasL2Distance {
-  friend Float length_squared(const Derived& d) {
-    Float result = d.x * d.x + d.y * d.y;
-    if constexpr (Derived::Dim == 3) result += d.z * d.z;
-    if constexpr (Derived::Dim == 4) result += d.z * d.z + d.w * d.w;
-    return result;
-  }
+  friend Float length_squared(const Derived& d) { return dot(d, d); }
 
   friend Float length(const Derived& d) { return std::sqrt(length_squared(d)); }
 
@@ -203,29 +210,23 @@ class HasL2Distance {
   }
 
   friend bool near_zero(const Derived& v) {
-    bool result = std::abs(v.x) < VERY_SMALL and std::abs(v.y) < VERY_SMALL;
-    if constexpr (Derived::Dim == 3) result &= std::abs(v.z) < VERY_SMALL;
-    if constexpr (Derived::Dim == 4)
-      result &= (std::abs(v.z) < VERY_SMALL and std::abs(v.w) < VERY_SMALL);
-
-    return result;
+    return [&]<size_t... I>(std::index_sequence<I...>) {
+      return ((std::abs(v.template get<I>()) < VERY_SMALL) and ...);
+    }(std::make_index_sequence<Derived::Dim>{});
   }
 };
 
 /* Element-wise product (mainly for colors)*/
 template <typename Derived>
 class HadamardProductable {
-  friend Derived hadamard_product(const Derived& c1, const Derived c2,
+  friend Derived hadamard_product(const Derived& c1, const Derived& c2,
                                   const size_t max_val = 255) {
     Derived c3;
-    c3.x = c1.x * c2.x / static_cast<Float>(max_val);
-    c3.y = c1.y * c2.y / static_cast<Float>(max_val);
-    if constexpr (Derived::Dim == 3)
-      c3.z = c1.z * c2.z / static_cast<Float>(max_val);
-    if constexpr (Derived::Dim == 4) {
-      c3.z = c1.z * c2.z / static_cast<Float>(max_val);
-      c3.w = c1.w * c2.w / static_cast<Float>(max_val);
-    }
+    [&]<size_t... I>(std::index_sequence<I...>) {
+      ((c3.template get<I>() = c1.template get<I>() * c2.template get<I>() /
+                               static_cast<Float>(max_val)),
+       ...);
+    }(std::make_index_sequence<Derived::Dim>{});
     return c3;
   }
 };
@@ -233,9 +234,12 @@ class HadamardProductable {
 template <typename Derived>
 class Printable {
   friend std::ostream& operator<<(std::ostream& o, const Derived& d) {
-    o << d.x << " " << d.y;
-    if constexpr (Derived::Dim == 3) o << " " << d.z;
-    if constexpr (Derived::Dim == 4) o << " " << d.z << " " << d.w;
+    // up until (including) one before last element, so we have the space
+    [&]<size_t... I>(std::index_sequence<I...>) {
+      ((o << d.template get<I>() << " "), ...);
+    }(std::make_index_sequence<Derived::Dim - 1>{});
+    // for the last element to prevent space at the end
+    o << d.template get<Derived::Dim - 1>();
     return o;
   }
 };
@@ -243,10 +247,9 @@ class Printable {
 template <typename Derived>
 class DotProductable {
   friend Float dot(const Derived& u, const Derived& v) {
-    Float result = u.x * v.x + u.y * v.y;
-    if constexpr (Derived::Dim == 3) result += u.z * v.z;
-    if constexpr (Derived::Dim == 4) result += (u.z * v.z + u.w * v.w);
-    return result;
+    return [&]<size_t... I>(std::index_sequence<I...>) {
+      return ((u.template get<I>() * v.template get<I>()) + ...);
+    }(std::make_index_sequence<Derived::Dim>{});
   }
 };
 
@@ -263,7 +266,7 @@ class CrossProductable {
 template <typename Derived>
 // TODO name better!
 class ReflectRefractable {
-  friend Derived reflect(const Derived& v, const Derived normal) {
+  friend Derived reflect(const Derived& v, const Derived& normal) {
     return v - 2 * dot(v, normal) * normal;
   }
 
@@ -294,14 +297,9 @@ class Translateable {
     requires(DimensionOf<Derived>::value == DimensionOf<Vec>::value and
              !std::is_same_v<Derived, Vec>)
   friend Derived& operator+=(Derived& p, const Vec& v) {
-    p.x += v.x;
-    p.y += v.y;
-    if constexpr (Derived::Dim == 3) p.z += v.z;
-    if constexpr (Derived::Dim == 4) {
-      p.z += v.z;
-      p.w += v.w;
-    }
-
+    [&]<size_t... I>(std::index_sequence<I...>) {
+      ((p.template get<I>() += v.template get<I>()), ...);
+    }(std::make_index_sequence<Derived::Dim>{});
     return p;
   }
 
@@ -325,13 +323,9 @@ class Translateable {
     requires(DimensionOf<Derived>::value == DimensionOf<Vec>::value and
              !std::is_same_v<Derived, Vec>)
   friend Derived& operator-=(Derived& p, const Vec& v) {
-    p.x -= v.x;
-    p.y -= v.y;
-    if constexpr (Derived::Dim == 3) p.z -= v.z;
-    if constexpr (Derived::Dim == 4) {
-      p.z -= v.z;
-      p.w -= v.w;
-    }
+    [&]<size_t... I>(std::index_sequence<I...>) {
+      ((p.template get<I>() -= v.template get<I>()), ...);
+    }(std::make_index_sequence<Derived::Dim>{});
 
     return p;
   }
