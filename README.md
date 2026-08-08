@@ -4,8 +4,11 @@ A CPU-based ray tracer implemented in C++23.
 
 ## Overview
 
-Sharlune is ray tracer that renders 3D scenes using ray-object intersections, lighting, shadows, and reflection.    
-It follows [Shirley](https://github.com/petershirley), [Black](https://github.com/trevordblack) and [Hollasch](https://github.com/hollasch) Ray Tracing series in physics and rendering calculations ([_Ray Tracing in One Weekend_](https://raytracing.github.io/books/RayTracingInOneWeekend.html), [_Ray Tracing: The Next Week_](https://raytracing.github.io/books/RayTracingTheNextWeek.html)), but it deviates in the implementation by adapting a different architecture and benefiting from multiple design patterns (CRTP, Visitor, Type Erasure, ...).  
+Sharlune is a study in modern C++ architecture.  
+It follows Shirley/Black/Hollasch's Ray Tracing series in physics and rendering calculations ([1](https://raytracing.github.io/books/RayTracingInOneWeekend.html), [2](https://raytracing.github.io/books/RayTracingTheNextWeek.html)), but it deviates in the architecture, design and implementation by adapting modern C++ and benefiting from multiple design patterns (Type Erasure, Visitor, CRTP, ...). It is also multithreaded.  
+It supports some basic geometries at the moment, OpenEXR format, lighting, shadows, and reflection. Although these features will extend gradually, the emphasis here is more on the architecture and utilizing modern C++ design.      
+For more on the design choices and noteworthy implementation details, see [DESIGN.md](https://github.com/roozyfx/sharlune/blob/master/DESIGN.md).  
+
 ## Features
 
 - Ray tracing renderer
