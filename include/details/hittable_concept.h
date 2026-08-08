@@ -1,5 +1,5 @@
-#ifndef INCLUDE_DETAILS_SHAPECONCEPT_H_
-#define INCLUDE_DETAILS_SHAPECONCEPT_H_
+#ifndef INCLUDE_DETAILS_HITTABLE_CONCEPT_H_
+#define INCLUDE_DETAILS_HITTABLE_CONCEPT_H_
 #include <memory>
 
 class Ray;
@@ -37,4 +37,4 @@ class OwningHittableModel : public HittableConcept {
 };
 }  // namespace details
 
-#endif  // INCLUDE_DETAILS_SHAPECONCEPT_H_
+#endif  // INCLUDE_DETAILS_HITTABLE_CONCEPT_H_

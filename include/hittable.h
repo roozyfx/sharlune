@@ -1,6 +1,6 @@
 #ifndef INCLUDE_HITTABLE_H_
 #define INCLUDE_HITTABLE_H_
-#include "details/shapeconcept.h"
+#include "details/hittable_concept.h"
 #include "hit_record.h"
 
 /*
