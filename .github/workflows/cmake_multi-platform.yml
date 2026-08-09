@@ -38,7 +38,7 @@ jobs:
             preset: macos-clang
             cc: clang
             cxx: clang++
-          - name: Windows MSVC 2026
+          - name: Windows MSVC
             os: windows-2025
             preset: windows-msvc
             cc: cl
