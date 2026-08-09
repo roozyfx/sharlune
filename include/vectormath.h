@@ -1,11 +1,13 @@
 #ifndef INCLUDE_VECTOR_MATH_H_
 #define INCLUDE_VECTOR_MATH_H_
 
+#include <algorithm>
 #include <cmath>
 #include <cstddef>
 #include <limits>
 #include <ostream>
 #include <stdexcept>
+#include <type_traits>
 #include <utility>
 
 #include "common.h"
@@ -27,7 +29,7 @@ struct TupleData<2> {
   }
 
   template <size_t I>
-  Float& get() noexcept {
+  constexpr Float& get() noexcept {
     static_assert(I < 2, "index out of range");
     if constexpr (I == 0)
       return x;
@@ -113,7 +115,7 @@ class Tuple : public TupleData<N>, public Skills<Tuple<N, Tag, Skills...>>... {
   Tuple& operator=(Tuple&&) = default;
   ~Tuple() = default;
 
-  constexpr size_t dimension() const { return N; }
+  static constexpr size_t dimension() noexcept { return N; }
 };
 
 /* CRTP Skills */
@@ -162,7 +164,7 @@ class Negatable {
 
 template <typename Derived>
 class Multipliable {
-  friend Derived& operator*=(Derived& lhs, const Float& k) {
+  friend Derived& operator*=(Derived& lhs, const Float k) {
     [&]<size_t... I>(std::index_sequence<I...>) {
       ((lhs.template get<I>() *= k), ...);
     }(std::make_index_sequence<Derived::Dim>{});
@@ -182,7 +184,7 @@ class Multipliable {
 
 template <typename Derived>
 class Dividable {
-  friend Derived& operator/=(Derived& lhs, const Float& k) {
+  friend Derived& operator/=(Derived& lhs, const Float k) {
     [&]<size_t... I>(std::index_sequence<I...>) {
       ((lhs.template get<I>() /= k), ...);
     }(std::make_index_sequence<Derived::Dim>{});
@@ -219,6 +221,7 @@ class HasL2Distance {
 /* Element-wise product (mainly for colors)*/
 template <typename Derived>
 class HadamardProductable {
+  // TODO Remove max_val and move it out of here
   friend Derived hadamard_product(const Derived& c1, const Derived& c2,
                                   const size_t max_val = 255) {
     Derived c3;
@@ -267,6 +270,9 @@ template <typename Derived>
 // TODO name better!
 class ReflectRefractable {
   friend Derived reflect(const Derived& v, const Derived& normal) {
+    static_assert(
+        requires(const Derived& vec) { dot(vec, vec); },
+        "ReflectRefractable requires the DotProductable skill");
     return v - 2 * dot(v, normal) * normal;
   }
 
@@ -275,7 +281,7 @@ class ReflectRefractable {
     auto cos_theta = std::min(dot(-uv, n), Float(1));
     Derived r_out_perp = etai_over_etat * (uv + cos_theta * n);
     Derived r_out_parallel =
-        -std::sqrt(std::abs(1.0 - length_squared(r_out_perp))) * n;
+        -std::sqrt(std::abs(Float(1.0) - length_squared(r_out_perp))) * n;
     return r_out_perp + r_out_parallel;
   }
 };
@@ -344,13 +350,9 @@ struct PointDifferenceable {
   template <typename Derived>
   class Skill {
     friend VectorType operator-(const Derived& lhs, const Derived& rhs) {
-      if constexpr (Derived::Dim == 2)
-        return VectorType(lhs.x - rhs.x, lhs.y - rhs.y);
-      if constexpr (Derived::Dim == 3)
-        return VectorType(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z);
-      if constexpr (Derived::Dim == 4)
-        return VectorType(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z,
-                          lhs.w - rhs.w);
+      return [&]<size_t... I>(std::index_sequence<I...>) {
+        return VectorType((lhs.template get<I>() - rhs.template get<I>())...);
+      }(std::make_index_sequence<Derived::Dim>{});
     }
   };
 };
