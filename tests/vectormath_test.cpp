@@ -264,3 +264,37 @@ TEST(TupleUtilTest, Printable) {
   ss4 << c4;
   EXPECT_EQ(ss4.str(), "1 0 0.5 0.25");
 }
+
+template <typename A, typename B>
+concept CanAdd = requires(A a, B b) { a + b; };
+
+template <typename A, typename B>
+concept CanSubtract = requires(A a, B b) { a - b; };
+
+template <typename A, typename B>
+concept CanCross = requires(A a, B b) { cross(a, b); };
+
+TEST(TupleTypeSystem, CompileTimeAffineOperations) {
+  // Affine type system
+  static_assert(CanAdd<Vec3, Vec3>);       // vector + vector : ok
+  static_assert(CanAdd<Vec3, Point3>);     // vector + point : ok
+  static_assert(CanAdd<Point3, Vec3>);     // point + vector : ok
+  static_assert(!CanAdd<Point3, Point3>);  // point + point : doesn't make sense
+
+  static_assert(CanSubtract<Vec3, Vec3>);      // vector - vector : ok
+  static_assert(CanSubtract<Point3, Vec3>);    // point - vector : ok
+  static_assert(!CanSubtract<Vec3, Point3>);   // vector - point : not allowed
+  static_assert(CanSubtract<Point3, Point3>);  // point - point : ok
+  EXPECT_TRUE((std::is_same_v<decltype(Point3{} - Point3{}),
+                              Vec3>));  // point - point => vector
+}
+
+TEST(TupleTypeSystem, CrossProductOnlyVec3) {
+  // Cross-product is limited to Vec3 x Vec3
+  static_assert(CanCross<Vec3, Vec3>);
+  static_assert(!CanCross<Vec2, Vec2>);
+  static_assert(!CanCross<Vec4, Vec4>);
+  static_assert(!CanCross<Point3, Point3>);
+  static_assert(!CanCross<Point3, Vec3>);
+  static_assert(!CanCross<Vec3, Point3>);
+}
