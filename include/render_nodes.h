@@ -6,7 +6,7 @@
 #include "interval.h"
 #include "render_node.h"
 #include "types.h"
-/* A utility class for a colllection of hittable items */
+/* A utility class for a collection of hittable items */
 class RenderNodes {
   using NodePtr = UPtr<RenderNode>;
   using RenderNodesCollection = std::vector<NodePtr>;
@@ -21,7 +21,7 @@ class RenderNodes {
 
   /*
   An extremely inefficient solution to find the Ray r, intersection with the
-  nearest object (Hittble) in our list
+  nearest object (Hittable) in our list
   */
   // TODO Not a good name, find a better one.
   bool hit_all(const Ray& r, Interval tt, HitRecord& record) const;
