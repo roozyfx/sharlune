@@ -42,8 +42,7 @@ int main(int argc, char** argv) {
   }
 
   // Render loop
-  if (camera && image && world)
-    render(std::move(camera), std::move(image), world.get());
+  if (camera && image && world) render(*camera, *image, world.get());
 
   return EXIT_SUCCESS;
 }

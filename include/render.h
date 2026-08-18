@@ -4,12 +4,10 @@
 #include "camera.h"
 #include "film.h"
 #include "render_nodes.h"
-#include "types.h"
 
-void render_single_thread(UPtr<Camera> camera, UPtr<Film> film,
+void render_single_thread(Camera& camera, Film& film,
                           const RenderNodes* const world);
 
-void render(UPtr<Camera> camera, UPtr<Film> film,
-            const RenderNodes* const world);
+void render(Camera& camera, Film& film, const RenderNodes* const world);
 
 #endif  // INCLUDE_RENDER_H_

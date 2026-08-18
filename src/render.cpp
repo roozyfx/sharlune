@@ -9,35 +9,34 @@
 #include "render_nodes.h"
 #include "types.h"
 
-void render_single_thread(UPtr<Camera> camera, UPtr<Film> film,
+void render_single_thread(Camera& camera, Film& film,
                           const RenderNodes* const world) {
   // Render loop
-  for (size_t y = 0; y < camera->image_height(); ++y) {
-    auto progress = float(y * 100) / static_cast<float>(camera->image_height());
+  for (size_t y = 0; y < camera.image_height(); ++y) {
+    auto progress = float(y * 100) / static_cast<float>(camera.image_height());
     if ((y % 20) == 0) std::cout << "Progress: " << progress << "%\n";
 
     DataRow row;
-    row.reserve(camera->image_width() * film->num_channels());
+    row.reserve(camera.image_width() * film.num_channels());
 
-    for (size_t x = 0; x < camera->image_width(); ++x) {
+    for (size_t x = 0; x < camera.image_width(); ++x) {
       Color pixel_color =
-          film->max_val() * camera->sample_pixel_color(x, y, world);
-      camera->write_pixel(std::move(pixel_color), row);
+          film.max_val() * camera.sample_pixel_color(x, y, world);
+      camera.write_pixel(std::move(pixel_color), row);
     }
 
-    camera->write_line(std::move(row));
+    camera.write_line(std::move(row));
   }
 
-  film->write(camera->data());
+  film.write(camera.data());
 }
 
-void render(UPtr<Camera> camera, UPtr<Film> film,
-            const RenderNodes* const world) {
-  const auto img_height{camera->image_height()};
-  const auto img_width{camera->image_width()};
+void render(Camera& camera, Film& film, const RenderNodes* const world) {
+  const auto img_height{camera.image_height()};
+  const auto img_width{camera.image_width()};
   DataStorage rows(img_height);
   for (auto& row : rows) {
-    row.reserve(img_width * film->num_channels());
+    row.reserve(img_width * film.num_channels());
   }
 
   const auto hardware_threads{std::thread::hardware_concurrency()};
@@ -53,9 +52,9 @@ void render(UPtr<Camera> camera, UPtr<Film> film,
       DataRow& row = rows[y];
       row.reserve(img_width);
       for (size_t x = 0; x < img_width; ++x) {
-        Color pixel_color{film->max_val() *
-                          camera->sample_pixel_color(x, y, world)};
-        camera->write_pixel(std::move(pixel_color), row);
+        Color pixel_color{film.max_val() *
+                          camera.sample_pixel_color(x, y, world)};
+        camera.write_pixel(std::move(pixel_color), row);
       }
     }
   };
@@ -71,5 +70,5 @@ void render(UPtr<Camera> camera, UPtr<Film> film,
     if (thread.joinable()) thread.join();
   }
 
-  film->write(rows);
+  film.write(rows);
 }
