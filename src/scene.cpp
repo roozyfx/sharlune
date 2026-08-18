@@ -13,7 +13,7 @@
 UPtr<RenderNodes> create_world() {
   auto material_ground = Lambertian(Color(0.8, 0.8, 0.0) * 255);
   auto material_center = Lambertian(Color(0.1, 0.2, 0.5) * 255);
-  auto material_left = Metal(Color(0.8, 0.8, 0.8) * 255, 0.3);
+  auto material_left = Metal(Color(0.8, 0.8, 0.8) * 255, Float(0.3));
   auto material_right = Metal(Color(0.8, 0.6, 0.2) * 255, 0);
 
   Sphere sphere1(Point3(0.0, -100.5, -1.0), 100.0);
