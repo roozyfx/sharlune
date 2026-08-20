@@ -9,11 +9,10 @@
 #include "vectormath.h"
 
 Point3 PinholeCamera::pixel_sample(const size_t x, const size_t y) const {
-  const auto center{pixel_center_loc(x, y)};
   const auto half_u{u_length_ * Float(0.5)};
   const auto half_v{v_length_ * Float(0.5)};
-  return Point3(center.x + random_number(-half_u, half_u),
-                center.y + random_number(-half_v, half_v), -focal_length_);
+  return pixel_center_loc(x, y) + random_number(-half_u, half_u) * d_u_ +
+         random_number(-half_v, half_v) * d_v_;
 }
 
 Color PinholeCamera::ray_color(const Ray& r, const RenderNodes* const world,
@@ -37,6 +36,7 @@ Color PinholeCamera::ray_color(const Ray& r, const RenderNodes* const world,
       return hadamard_product(ray_color(scattered_ray, world, depth - 1),
                               attenuation);
     }
+    return Color();
   }
 
   Vec3 unit_direction;

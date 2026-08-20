@@ -32,9 +32,8 @@ class PinholeCamera : public Camera {
     v_ = cross(w_, u_);
 
     viewport_height_ = vfov2viewport_height(vertical_fov_, focal_length_);
-    // TODO Check this
     viewport_width_ = viewport_height_ *
-                      (Float(image_width_) / static_cast<Float>(image_width_));
+                      (Float(image_width_) / static_cast<Float>(image_height_));
 
     viewport_u_ = viewport_width_ * u_;
     viewport_v_ = -viewport_height_ * v_;
@@ -65,9 +64,9 @@ class PinholeCamera : public Camera {
 
   // TODO Improve efficiency
   inline void write_pixel(Color&& color, DataRow& row) override {
-    row.push_back(static_cast<int>(color.x));
-    row.push_back(static_cast<int>(color.y));
-    row.push_back(static_cast<int>(color.z));
+    row.push_back(color.x);
+    row.push_back(color.y);
+    row.push_back(color.z);
   }
 
   inline void write_line(DataRow&& row) override { data_.push_back(row); }
