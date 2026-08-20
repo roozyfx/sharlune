@@ -40,9 +40,9 @@ void render(Camera& camera, Film& film, const RenderNodes* const world) {
   const auto hardware_threads{std::thread::hardware_concurrency()};
   auto num_threads{
       std::max<size_t>(1, hardware_threads == 0 ? 1 : hardware_threads)};
+  std::cout << num_threads << std::endl;
   std::vector<std::thread> threads;
   threads.reserve(num_threads);
-  const auto block_height{img_height / num_threads};
 
   auto block_render = [&](const size_t start_y, const size_t end_y) {
     for (size_t y = start_y; y < end_y; ++y) {
@@ -56,9 +56,9 @@ void render(Camera& camera, Film& film, const RenderNodes* const world) {
   };
 
   for (size_t worker_number = 0; worker_number < num_threads; ++worker_number) {
-    const auto start_y{worker_number * block_height};
+    const auto start_y{(worker_number * img_height) / num_threads};
     if (start_y >= img_height) break;
-    const auto end_y{std::min(start_y + block_height, img_height)};
+    const auto end_y{((worker_number + 1) * img_height) / num_threads};
     threads.emplace_back(std::thread{block_render, start_y, end_y});
   }
 
