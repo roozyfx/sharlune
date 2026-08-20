@@ -7,7 +7,6 @@
 
 #include "common.h"
 #include "render_nodes.h"
-#include "types.h"
 
 void render_single_thread(Camera& camera, Film& film,
                           const RenderNodes* const world) {
@@ -20,8 +19,7 @@ void render_single_thread(Camera& camera, Film& film,
     row.reserve(camera.image_width() * film.num_channels());
 
     for (size_t x = 0; x < camera.image_width(); ++x) {
-      Color pixel_color =
-          film.max_val() * camera.sample_pixel_color(x, y, world);
+      Color pixel_color{camera.sample_pixel_color(x, y, world)};
       camera.write_pixel(std::move(pixel_color), row);
     }
 
@@ -42,7 +40,6 @@ void render(Camera& camera, Film& film, const RenderNodes* const world) {
   const auto hardware_threads{std::thread::hardware_concurrency()};
   auto num_threads{
       std::max<size_t>(1, hardware_threads == 0 ? 1 : hardware_threads)};
-  num_threads = 1;
   std::vector<std::thread> threads;
   threads.reserve(num_threads);
   const auto block_height{img_height / num_threads};
@@ -52,8 +49,7 @@ void render(Camera& camera, Film& film, const RenderNodes* const world) {
       DataRow& row = rows[y];
       row.reserve(img_width);
       for (size_t x = 0; x < img_width; ++x) {
-        Color pixel_color{film.max_val() *
-                          camera.sample_pixel_color(x, y, world)};
+        Color pixel_color{camera.sample_pixel_color(x, y, world)};
         camera.write_pixel(std::move(pixel_color), row);
       }
     }

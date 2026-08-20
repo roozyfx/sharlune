@@ -25,11 +25,12 @@ void PPMImage::write(const DataStorage& data) {
   }
 
   std::clog << "Saving data to " << filename_ << std::endl;
-
+  const auto fmax_val{static_cast<Float>(max_val_)};
   // TODO re-write more efficiently
   for (auto& row : data) {
     for (size_t i = 0; i < row.size(); ++i) {
-      file_ << row[i] << (i % num_channels_ == num_channels_ - 1 ? '\n' : ' ');
+      file_ << static_cast<int>(row[i] * fmax_val)
+            << (i % num_channels_ == num_channels_ - 1 ? '\n' : ' ');
     }
   }
 }
